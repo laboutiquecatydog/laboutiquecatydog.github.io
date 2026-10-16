@@ -1,0 +1,17 @@
+# Imágenes originales de alta resolución (ya optimizadas en assets/img/)
+Contenido Imagenes/
+
+# Copias de seguridad históricas (no forman parte del sitio publicado)
+_backup/
+
+# Sistema
+.DS_Store
+Thumbs.db
+desktop.ini
+
+# Editores / entorno
+.vscode/
+.idea/
+*.log
+.env
+node_modules/
