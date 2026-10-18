@@ -15,14 +15,11 @@
   --gray-150: #ededea;
   --gray-200: #e5e4e0;
   --gray-300: #d4d3ce;
-  --gray-400: #adaca7;
-  --gray-500: #86857f;
   --gray-600: #66655f;
   --gray-700: #433f3b;
 
   --accent: #c0272d;
   --accent-dark: #9c1d22;
-  --accent-soft: #fbeceb;
 
   --font-heading: "Playfair Display", Georgia, "Times New Roman", serif;
   --font-body: "Inter", -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
@@ -30,8 +27,6 @@
   --radius-sm: 8px;
   --radius: 14px;
   --radius-lg: 22px;
-
-  --line: var(--gray-200);
 
   --shadow-sm: 0 2px 12px rgba(18, 18, 18, 0.05);
   --shadow: 0 18px 45px rgba(18, 18, 18, 0.09);
@@ -58,6 +53,10 @@
 html {
   scroll-behavior: smooth;
   -webkit-text-size-adjust: 100%;
+  /* Recorta el desbordamiento horizontal del panel de navegacion cerrado
+     (fuera de pantalla). `clip` NO crea un contenedor de scroll, por lo que
+     el header sticky sigue funcionando (a diferencia de `hidden`). */
+  overflow-x: clip;
 }
 
 body {
@@ -70,7 +69,8 @@ body {
   -webkit-font-smoothing: antialiased;
   text-rendering: optimizeLegibility;
   -webkit-tap-highlight-color: transparent;
-  overflow-x: hidden;
+  overflow-x: hidden; /* respaldo en navegadores sin soporte de `clip` */
+  overflow-x: clip;
 }
 
 img { max-width: 100%; display: block; }
@@ -141,7 +141,7 @@ button { font-family: inherit; }
   background: var(--seal) center / contain no-repeat;
 }
 
-.accent { color: var(--black); }
+.accent { color: var(--accent); }
 
 /* ------------------------------ Buttons --------------------------------- */
 .btn {
@@ -309,14 +309,11 @@ button { font-family: inherit; }
 .nav-overlay.is-visible { opacity: 1; }
 
 /* ------------------------------ Carousel -------------------------------- */
-.hero { background: var(--gray-100); }
-
 .carousel { position: relative; }
 
 .carousel-viewport {
   position: relative;
   overflow: hidden;
-  aspect-ratio: 2.2 / 1;
   background: var(--gray-150);
   touch-action: pan-y;
 }
@@ -380,26 +377,36 @@ button { font-family: inherit; }
 .carousel-dot.is-active { width: 26px; background: var(--accent); border-color: var(--accent); }
 
 /* ---------------------------- PresentaciÃ³n ------------------------------ */
-.intro { padding: clamp(58px, 7.5vw, 108px) 0; }
-.intro-grid {
+.hero { background: var(--gray-100); }
+.hero-grid {
   display: grid;
-  grid-template-columns: 1.1fr 0.9fr;
-  gap: clamp(28px, 5vw, 76px);
+  grid-template-columns: 1.05fr 0.95fr;
+  gap: clamp(32px, 5vw, 68px);
   align-items: center;
+  padding-top: clamp(48px, 6vw, 76px);
+  padding-bottom: clamp(48px, 6vw, 76px);
 }
-.intro-title {
+.hero-copy { max-width: 46rem; }
+.hero-title {
   font-size: clamp(2.2rem, 5.2vw, 3.7rem);
   line-height: 1.04;
   letter-spacing: -0.02em;
-  margin: 0;
+  margin: 0 0 0.4em;
 }
-.intro-lead {
+.hero-lead {
   color: var(--gray-600);
   font-size: clamp(1.02rem, 1.6vw, 1.18rem);
   max-width: 46ch;
   margin: 0 0 1.8em;
 }
-.intro-actions { display: flex; flex-wrap: wrap; gap: 14px; }
+.hero-actions { display: flex; flex-wrap: wrap; gap: 14px; }
+
+.hero-media .carousel {
+  border-radius: var(--radius-lg);
+  overflow: hidden;
+  box-shadow: var(--shadow);
+}
+.hero-media .carousel-viewport { aspect-ratio: 3 / 2; }
 
 /* ---------------------------- CategorÃ­as -------------------------------- */
 .category-grid {
@@ -431,8 +438,6 @@ button { font-family: inherit; }
   transition: color 0.25s var(--ease);
 }
 .link-arrow span { transition: transform 0.25s var(--ease); }
-.category-card:hover .link-arrow,
-.product-body .link-arrow:hover { color: var(--black); }
 .category-card:hover .link-arrow span,
 .product-body .link-arrow:hover span { transform: translateX(4px); }
 
@@ -673,7 +678,7 @@ button { font-family: inherit; }
 .footer-col ul { display: grid; gap: 11px; }
 .footer-col a, .footer-col span { font-size: 0.93rem; color: rgba(255, 255, 255, 0.66); transition: color 0.2s var(--ease); }
 .footer-col a:hover { color: var(--white); }
-.social-list { display: flex !important; gap: 12px; }
+.footer-col .social-list { display: flex; gap: 12px; }
 .social-list a {
   display: inline-flex;
   align-items: center;
@@ -754,7 +759,6 @@ html.js [data-reveal].in-view { opacity: 1; }
   .nav-list { gap: 20px; }
   .nav-link { font-size: 0.9rem; }
   .main-nav { gap: 22px; }
-  .carousel-viewport { aspect-ratio: 2 / 1; }
 }
 
 @media (max-width: 860px) {
@@ -796,13 +800,19 @@ html.js [data-reveal].in-view { opacity: 1; }
   .nav-actions { flex-direction: column; align-items: stretch; gap: 18px; }
   .nav-cta { width: 100%; }
 
-  .carousel-viewport { aspect-ratio: 16 / 9; }
   .carousel-btn { width: 42px; height: 42px; }
   .carousel-btn svg { width: 20px; height: 20px; }
 
-  .intro-grid { grid-template-columns: 1fr; gap: 26px; }
-  .intro-title { margin-bottom: 0.1em; }
-  .intro-lead { margin-bottom: 1.5em; }
+  .hero-grid {
+    grid-template-columns: 1fr;
+    gap: 30px;
+    padding-top: clamp(36px, 7vw, 58px);
+    padding-bottom: clamp(44px, 8vw, 62px);
+  }
+  .hero-copy { max-width: none; }
+  .hero-title { margin-bottom: 0.35em; }
+  .hero-lead { margin-bottom: 1.5em; }
+  .hero-media .carousel-viewport { aspect-ratio: 16 / 9; }
 
   .category-grid { grid-template-columns: 1fr; gap: 34px; }
 
@@ -813,11 +823,19 @@ html.js [data-reveal].in-view { opacity: 1; }
 @media (max-width: 560px) {
   .info-grid { grid-template-columns: 1fr; }
   .footer-grid { grid-template-columns: 1fr; gap: 30px; }
-  .intro-actions { flex-direction: column; align-items: stretch; }
-  .intro-actions .btn { width: 100%; }
+  .hero-grid {
+    gap: 22px;
+    padding-top: 26px;
+    padding-bottom: 34px;
+  }
+  .hero-title { margin-bottom: 0.3em; }
+  .hero-lead { margin-bottom: 1.1em; }
+  .hero-actions { flex-direction: column; align-items: stretch; }
+  .hero-actions .btn { width: 100%; }
   .contact-cta { flex-direction: column; }
   .contact-cta .btn { width: 100%; }
-  .carousel-viewport { aspect-ratio: 4 / 3; }
+  /* En celular la foto se muestra panorámica para acortar la portada. */
+  .hero-media .carousel-viewport { aspect-ratio: 16 / 9; }
   .carousel-dots { bottom: 14px; }
   .carousel-dot { width: 8px; height: 8px; }
   .carousel-dot.is-active { width: 22px; }
