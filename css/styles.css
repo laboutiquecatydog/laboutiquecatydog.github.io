@@ -115,6 +115,10 @@ button { font-family: inherit; }
 
 .section[id] { scroll-margin-top: calc(var(--header-h) + 8px); }
 
+/* Transición Categorías → Productos: fondos unificados y costura reducida. */
+#categorias { padding-bottom: clamp(40px, 5vw, 64px); }
+#productos { padding-top: clamp(56px, 6.5vw, 88px); }
+
 .section-head { max-width: 660px; margin: 0 auto clamp(40px, 5vw, 64px); text-align: center; }
 .section-head h2 { font-size: clamp(2rem, 4.2vw, 2.9rem); margin-bottom: 0.35em; }
 .section-intro { color: var(--gray-600); font-size: 1.04rem; margin: 0; }
@@ -415,18 +419,42 @@ button { font-family: inherit; }
   gap: clamp(20px, 3vw, 40px);
 }
 .category-card {
-  display: block;
+  display: flex;
+  flex-direction: column;
   position: relative;
-  padding: clamp(28px, 3.5vw, 44px) 0 0;
-  border-top: 2px solid var(--gray-200);
-  transition: border-color 0.3s var(--ease);
+  overflow: hidden;
+  padding: 0;
+  background: var(--white);
+  border: 1px solid var(--gray-200);
+  border-radius: var(--radius-lg);
+  transition: border-color 0.3s var(--ease), box-shadow 0.3s var(--ease), transform 0.3s var(--ease);
 }
-.category-card:hover { border-color: var(--black); }
+.category-media {
+  display: block;
+  width: 100%;
+  height: auto;
+  aspect-ratio: 16 / 9;
+  object-fit: cover;
+  background: var(--gray-100);
+}
+.category-body {
+  display: flex;
+  flex-direction: column;
+  flex: 1;
+  align-items: flex-start;
+  padding: clamp(26px, 3.2vw, 40px);
+}
+.category-card:hover {
+  border-color: var(--accent);
+  box-shadow: var(--shadow-sm);
+  transform: translateY(-3px);
+}
 .category-card h3 {
   font-size: clamp(1.9rem, 3.6vw, 2.6rem);
-  margin-bottom: 0.28em;
+  margin-bottom: 0.3em;
 }
-.category-card p { color: var(--gray-600); margin-bottom: 1.4em; max-width: 46ch; }
+.category-card p { color: var(--gray-600); margin-bottom: 1.6em; max-width: 46ch; }
+.category-card .link-arrow { margin-top: auto; }
 
 .link-arrow {
   display: inline-flex;
@@ -814,7 +842,7 @@ html.js [data-reveal].in-view { opacity: 1; }
   .hero-lead { margin-bottom: 1.5em; }
   .hero-media .carousel-viewport { aspect-ratio: 16 / 9; }
 
-  .category-grid { grid-template-columns: 1fr; gap: 34px; }
+  .category-grid { grid-template-columns: 1fr; gap: 24px; }
 
   .about-grid { grid-template-columns: 1fr; }
   .about-media { order: -1; max-width: 460px; }

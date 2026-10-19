@@ -2,8 +2,8 @@
 
 Sitio web de una sola página (landing) para **La Boutique Cat & Dog**, tienda de productos para perros y gatos. HTML + CSS + JavaScript vanilla, **sin frameworks ni build**: se abre directo en el navegador y se sirve tal cual desde cualquier servidor estático (GitHub Pages, Netlify, etc.).
 
-**Vista previa:** `https://<usuario>.github.io/la-boutique-cat-y-dog/`
-*(la URL se completa al publicar el repositorio; ver [Despliegue](#despliegue-github-pages)).*
+**Vista previa:** <https://laboutiquecatydog.github.io/>
+*(publicada con GitHub Pages, rama `main`, raíz; ver [Despliegue](#despliegue-github-pages)).*
 
 ---
 
@@ -15,7 +15,7 @@ Una sola página con navegación por anclas:
 |---|---|---|
 | Portada | `#inicio` (`.hero`) | Carrusel de fotos, título y botón de WhatsApp |
 | Bienvenida | `.intro` | Texto de presentación del negocio |
-| Categorías | `#categorias` | Tarjetas: alimento, accesorios, camas, transportes |
+| Categorías | `#categorias` | Tarjetas **Perros** y **Gatos** (con imagen) que enlazan a Productos |
 | Productos | `#productos` | Galería de productos con carrusel |
 | Nosotros | `#nosotros` | Información del local y foto |
 | Contacto | `#contacto` | WhatsApp, redes, mapa y horarios |
@@ -153,6 +153,7 @@ Además de la revisión visual:
 
 - Todo lo que se muestra está en `assets/img/`, ya **optimizado** (JPG + variantes `-900` para pantallas chicas, `srcset`/`imagesizes` en el HTML).
 - Las **versiones originales de alta resolución** están en `Contenido Imagenes/` y **no se publican ni se versionan** (26 MB). Si se reemplaza una foto, se optimiza y se sube el resultado a `assets/img/`.
+- Las imágenes de las tarjetas de categorías —`assets/img/seccion-perros.jpg` (1280×720) y `assets/img/seccion-gatos.jpg` (1280×698)— son **copias optimizadas** de los originales en `Contenido Imagenes/Secciones/` (`seccion perros.jpg`, `seccion gatos.jpg`); los originales no se versionan.
 - Favicon en SVG (`assets/img/favicon.svg`) e icono para iOS (`apple-touch-icon.png`).
 
 ---
@@ -168,13 +169,13 @@ Además de la revisión visual:
 
 ## Despliegue (GitHub Pages)
 
-El sitio es 100 % estático, así que se publica desde la rama principal sin build.
+El sitio es 100 % estático y se publica como **sitio de usuario**: el repositorio `laboutiquecatydog.github.io` se sirve desde la rama `main` (raíz), sin build.
 
-1. Subí los cambios a `main`.
-2. En el repo de GitHub: **Settings → Pages → Source: Deploy from a branch**, rama `main`, carpeta `/ (root)`.
-3. La página queda en `https://<usuario>.github.io/la-boutique-cat-y-dog/`.
+- **URL publicada:** <https://laboutiquecatydog.github.io/>
+- Repositorio: `https://github.com/laboutiquecatydog/laboutiquecatydog.github.io`
+- Configuración: **Settings → Pages → Source: Deploy from a branch**, rama `main`, carpeta `/ (root)`; **HTTPS activado**.
 
-Al publicar, completá la URL canónica que está comentada en `index.html` (búsqueda de `canonical` y `og:url`).
+Para actualizar, subí los cambios a `main` y Pages reconstruye automáticamente. La URL canónica y las etiquetas Open Graph / Twitter ya apuntan a la URL publicada.
 
 ---
 
@@ -188,10 +189,25 @@ Al publicar, completá la URL canónica que está comentada en `index.html` (bú
 
 ---
 
+## Estado del proyecto
+
+Sitio publicado en GitHub Pages. Etapas completadas:
+
+| Etapa | Cambio |
+|---|---|
+| Portada | Hero en dos columnas (texto + carrusel) |
+| Responsive | Ajustes en móvil/tablet (hero, imágenes, sin scroll horizontal) |
+| Limpieza CSS | Tokens y reglas sin uso eliminados; color de acento de marca |
+| Categorías (C) | Nuevo encabezado y tarjetas como componentes tipo boutique; transición a Productos sin costura |
+| Categorías (D1) | Imágenes **Perros** y **Gatos** integradas en las tarjetas |
+
+---
+
 ## Pendientes / TODO
 
-- [ ] Completar URL canónica y `og:url` al publicar.
+- [ ] Filtros **Todos / Perros / Gatos** en la sección de productos.
 - [ ] Verificar resolución de `assets/img/local.jpg` (449×660, se ve algo baja para fondo).
+- [ ] Revisar recorte/encuadre de las fotos de producto (proporciones dispares entre slides).
 - [ ] Considerar dominio propio + SSL si el negocio quiere una URL de marca.
 
 ---
