@@ -5,37 +5,45 @@
       "huella": "izquierda",
       "id": "inicio",
       "aria": "Bienvenida",
-      "eyebrow": "Tienda de productos para mascotas",
+      "eyebrow": "Tienda de productos para mascotasssss.",
       "titulo": "Todo para tus **perros** y **gatos**",
       "texto": "Alimento, accesorios, higiene y todo lo que tu mascota necesita, con atención cercana y asesoramiento en el local.",
-      "botonPrincipal": { "texto": "Consultar por WhatsApp", "mensaje": "Hola, quisiera consultar por sus productos para mascotas" },
-      "botonSecundario": { "texto": "Ver productos", "enlace": "#productos" },
+      "botonPrincipal": {
+        "texto": "Consultar por WhatsApp",
+        "mensaje": "Hola, quisiera consultar por sus productos para mascotas"
+      },
+      "botonSecundario": {
+        "texto": "Ver productos",
+        "enlace": "#productos"
+      },
       "carruselAria": "Fotografías de La Boutique Cat & Dog",
       "slides": [
         {
           "imagen": "assets/img/slide-1.jpg",
+          "alt": "Interior de La Boutique Cat & Dog con productos para mascotas",
           "srcset": "assets/img/slide-1-900.jpg 900w, assets/img/slide-1.jpg 1600w",
           "sizes": "(max-width: 860px) 100vw, 50vw",
-          "alt": "Interior de La Boutique Cat & Dog con productos para mascotas",
           "ancho": 1600,
           "alto": 738,
           "prioridad": true
         },
         {
           "imagen": "assets/img/slide-2.jpg",
+          "alt": "Productos y accesorios para perros y gatos en La Boutique",
           "srcset": "assets/img/slide-2-900.jpg 900w, assets/img/slide-2.jpg 1600w",
           "sizes": "(max-width: 860px) 100vw, 50vw",
-          "alt": "Productos y accesorios para perros y gatos en La Boutique",
           "ancho": 1600,
-          "alto": 737
+          "alto": 737,
+          "prioridad": false
         },
         {
           "imagen": "assets/img/slide-3.jpg",
+          "alt": "Vitrina de La Boutique Cat & Dog",
           "srcset": "assets/img/slide-3-900.jpg 900w, assets/img/slide-3.jpg 1527w",
           "sizes": "(max-width: 860px) 100vw, 50vw",
-          "alt": "Vitrina de La Boutique Cat & Dog",
           "ancho": 1527,
-          "alto": 704
+          "alto": 704,
+          "prioridad": false
         }
       ]
     },
@@ -75,8 +83,8 @@
       "eyebrow": "Productos destacados",
       "titulo": "Lo más buscado",
       "intro": "Algunos de los productos que encontrás en el local. Escribinos por WhatsApp y te confirmamos disponibilidad.",
-      "mostrarFiltros": true,
       "ctaTexto": "Consultar disponibilidad",
+      "mostrarFiltros": true,
       "productos": [
         {
           "etiqueta": "Perros y gatos",
@@ -86,8 +94,14 @@
           "precio": "",
           "mensajeWhatsApp": "Hola, quisiera consultar por alimento y nutrición para mascotas",
           "fotos": [
-            { "foto": "assets/img/alimento-1.jpg", "alt": "Alimento y nutrición para perros y gatos" },
-            { "foto": "assets/img/alimento-2.jpg", "alt": "Bolsas de alimento balanceado para perros Fawna" }
+            {
+              "foto": "assets/img/alimento-1.jpg",
+              "alt": "Alimento y nutrición para perros y gatos"
+            },
+            {
+              "foto": "assets/img/alimento-2.jpg",
+              "alt": "Bolsas de alimento balanceado para perros Fawna"
+            }
           ]
         },
         {
@@ -98,9 +112,18 @@
           "precio": "",
           "mensajeWhatsApp": "Hola, quisiera consultar por camas y descanso para mascotas",
           "fotos": [
-            { "foto": "assets/img/camas-1.jpg", "alt": "Cama fucsia para mascotas" },
-            { "foto": "assets/img/camas-2.jpg", "alt": "Cama para mascotas" },
-            { "foto": "assets/img/camas-3.jpg", "alt": "Cama y rincón de descanso para mascotas" }
+            {
+              "foto": "assets/img/camas-1.jpg",
+              "alt": "Cama fucsia para mascotas"
+            },
+            {
+              "foto": "assets/img/camas-2.jpg",
+              "alt": "Cama para mascotas"
+            },
+            {
+              "foto": "assets/img/camas-3.jpg",
+              "alt": "Cama y rincón de descanso para mascotas"
+            }
           ]
         },
         {
@@ -111,8 +134,14 @@
           "precio": "",
           "mensajeWhatsApp": "Hola, quisiera consultar por mochilas transportadoras para mascotas",
           "fotos": [
-            { "foto": "assets/img/transporte-1.jpg", "alt": "Mochila transportadora para gatos con ventana burbuja" },
-            { "foto": "assets/img/transporte-2.jpg", "alt": "Mochila transportadora con ventana burbuja, vista lateral" }
+            {
+              "foto": "assets/img/transporte-1.jpg",
+              "alt": "Mochila transportadora para gatos con ventana burbuja"
+            },
+            {
+              "foto": "assets/img/transporte-2.jpg",
+              "alt": "Mochila transportadora con ventana burbuja, vista lateral"
+            }
           ]
         },
         {
@@ -123,8 +152,14 @@
           "precio": "",
           "mensajeWhatsApp": "Hola, quisiera consultar por accesorios para mascotas",
           "fotos": [
-            { "foto": "assets/img/accesorios-1.jpg", "alt": "Accesorios y productos para mascotas" },
-            { "foto": "assets/img/accesorios-2.jpg", "alt": "Accesorios para mascotas" }
+            {
+              "foto": "assets/img/accesorios-1.jpg",
+              "alt": "Accesorios y productos para mascotas"
+            },
+            {
+              "foto": "assets/img/accesorios-2.jpg",
+              "alt": "Accesorios para mascotas"
+            }
           ]
         },
         {
@@ -135,7 +170,10 @@
           "precio": "",
           "mensajeWhatsApp": "Hola, quisiera consultar por juguetes para mascotas",
           "fotos": [
-            { "foto": "assets/img/juguetes-1.jpg", "alt": "Juguetes GiGwi para perros" }
+            {
+              "foto": "assets/img/juguetes-1.jpg",
+              "alt": "Juguetes GiGwi para perros"
+            }
           ]
         }
       ]
@@ -156,7 +194,10 @@
       "imagenAlt": "Fachada de La Boutique Cat & Dog",
       "imagenAncho": 449,
       "imagenAlto": 660,
-      "boton": { "texto": "Hacé tu consulta", "mensaje": "Hola, quisiera consultar por sus productos para mascotas" }
+      "boton": {
+        "texto": "Hacé tu consulta",
+        "mensaje": "Hola, quisiera consultar por sus productos para mascotas"
+      }
     },
     {
       "tipo": "contacto",
@@ -165,9 +206,16 @@
       "eyebrow": "Contacto",
       "titulo": "Hablemos por WhatsApp",
       "intro": "Consultanos por productos, disponibilidad y atención en el local.",
-      "botonWhatsapp": { "texto": "Escribinos por WhatsApp", "mensaje": "Hola, quisiera consultar por sus productos para mascotas" },
+      "botonWhatsapp": {
+        "texto": "Escribinos por WhatsApp",
+        "mensaje": "Hola, quisiera consultar por sus productos para mascotas"
+      },
       "botonMapsTexto": "Cómo llegar",
-      "ordenSocial": ["instagram", "tiktok", "facebook"]
+      "ordenSocial": [
+        "instagram",
+        "tiktok",
+        "facebook"
+      ]
     }
   ]
 }
