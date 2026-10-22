@@ -181,6 +181,8 @@ button { font-family: inherit; }
 .btn-outline { background: transparent; color: var(--black); border-color: var(--gray-300); }
 .btn-outline:hover { border-color: var(--black); background: var(--black); color: var(--white); }
 
+.btn:active { transform: translateY(1px); }
+
 /* --------------------------- Skip link ---------------------------------- */
 .skip-link {
   position: absolute;
@@ -302,6 +304,9 @@ button { font-family: inherit; }
 .nav-toggle[aria-expanded="true"] span:nth-child(2) { opacity: 0; }
 .nav-toggle[aria-expanded="true"] span:nth-child(3) { transform: translateY(-6.5px) rotate(-45deg); }
 
+.nav-toggle:hover { border-color: var(--gray-300); }
+.nav-toggle:active { transform: scale(0.96); }
+
 .nav-overlay {
   position: fixed;
   inset: 0;
@@ -354,6 +359,7 @@ button { font-family: inherit; }
 }
 .carousel-btn svg { width: 22px; height: 22px; }
 .carousel-btn:hover { background: var(--white); transform: translateY(-50%) scale(1.05); }
+.carousel-btn:active { transform: translateY(-50%) scale(0.97); }
 .carousel-prev { left: clamp(12px, 2.2vw, 30px); }
 .carousel-next { right: clamp(12px, 2.2vw, 30px); }
 
@@ -379,6 +385,7 @@ button { font-family: inherit; }
   transition: width 0.3s var(--ease), background 0.3s var(--ease);
 }
 .carousel-dot.is-active { width: 26px; background: var(--accent); border-color: var(--accent); }
+.carousel-dot:hover { background: var(--white); border-color: var(--gray-300); }
 
 /* ---------------------------- PresentaciÃ³n ------------------------------ */
 .hero { background: var(--gray-100); }
@@ -427,7 +434,22 @@ button { font-family: inherit; }
   background: var(--white);
   border: 1px solid var(--gray-200);
   border-radius: var(--radius-lg);
-  transition: border-color 0.3s var(--ease), box-shadow 0.3s var(--ease), transform 0.3s var(--ease);
+  transition: border-color 0.5s var(--ease), box-shadow 0.5s var(--ease), transform 0.5s var(--ease);
+}
+/* Degradado sutil sobre la foto: aparece con el hover para dar profundidad
+   y evitar que el zoom se sienta plano. */
+.category-card::before {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  aspect-ratio: 16 / 9;
+  z-index: 1;
+  pointer-events: none;
+  opacity: 0;
+  background: linear-gradient(to top, rgba(18, 18, 18, 0.34), rgba(18, 18, 18, 0) 58%);
+  transition: opacity 0.5s var(--ease);
 }
 .category-media {
   display: block;
@@ -436,6 +458,8 @@ button { font-family: inherit; }
   aspect-ratio: 16 / 9;
   object-fit: cover;
   background: var(--gray-100);
+  will-change: transform;
+  transition: transform 0.7s cubic-bezier(0.19, 1, 0.22, 1);
 }
 .category-body {
   display: flex;
@@ -446,9 +470,12 @@ button { font-family: inherit; }
 }
 .category-card:hover {
   border-color: var(--accent);
-  box-shadow: var(--shadow-sm);
-  transform: translateY(-3px);
+  box-shadow: 0 24px 48px -22px rgba(18, 18, 18, 0.3), 0 6px 16px -10px rgba(18, 18, 18, 0.16);
+  transform: translateY(-6px);
 }
+.category-card:hover::before { opacity: 1; }
+.category-card:hover .category-media { transform: scale(1.05); }
+.category-card:active { transform: translateY(-2px); }
 .category-card h3 {
   font-size: clamp(1.9rem, 3.6vw, 2.6rem);
   margin-bottom: 0.3em;
@@ -466,10 +493,37 @@ button { font-family: inherit; }
   transition: color 0.25s var(--ease);
 }
 .link-arrow span { transition: transform 0.25s var(--ease); }
-.category-card:hover .link-arrow span,
 .product-body .link-arrow:hover span { transform: translateX(4px); }
+.category-card .link-arrow { transition: color 0.35s var(--ease); }
+.category-card:hover .link-arrow { color: var(--accent); }
+.category-card:hover .link-arrow span { transform: translateX(6px); }
 
 /* ----------------------------- Productos -------------------------------- */
+.product-filters {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 10px;
+  margin-bottom: clamp(30px, 4vw, 46px);
+}
+.filter-chip {
+  padding: 9px 20px;
+  border: 1px solid var(--gray-200);
+  border-radius: 999px;
+  background: var(--white);
+  color: var(--gray-600);
+  font-family: var(--font-body);
+  font-size: 0.9rem;
+  font-weight: 600;
+  line-height: 1;
+  cursor: pointer;
+  transition: color 0.2s var(--ease), background 0.2s var(--ease),
+    border-color 0.2s var(--ease), transform 0.2s var(--ease);
+}
+.filter-chip:hover { color: var(--black); border-color: var(--gray-300); }
+.filter-chip:active { transform: translateY(1px); }
+.filter-chip.is-active { background: var(--black); border-color: var(--black); color: var(--white); }
+
 .product-grid {
   display: flex;
   flex-wrap: wrap;
@@ -482,6 +536,7 @@ button { font-family: inherit; }
   flex: 1 1 320px;
   max-width: 366px;
 }
+.product-card[hidden] { display: none; }
 
 /* Carrusel de imÃ¡genes por cada categorÃ­a de productos */
 .product-carousel {
@@ -528,12 +583,13 @@ button { font-family: inherit; }
   background: rgba(255, 255, 255, 0.92);
   color: var(--black);
   cursor: pointer;
-  transition: opacity 0.25s var(--ease), background 0.25s var(--ease), border-color 0.25s var(--ease);
+  transition: opacity 0.25s var(--ease), background 0.25s var(--ease), border-color 0.25s var(--ease), transform 0.2s var(--ease);
 }
 .pc-btn svg { width: 18px; height: 18px; }
 .pc-prev { left: 10px; }
 .pc-next { right: 10px; }
 .pc-btn:hover { background: var(--white); border-color: var(--gray-300); }
+.pc-btn:active { transform: translateY(-50%) scale(0.9); }
 
 /* En dispositivos con mouse las flechas aparecen al pasar el cursor;
    en pantallas tÃ¡ctiles quedan siempre visibles y mÃ¡s grandes (>= 44px). */
@@ -580,7 +636,21 @@ button { font-family: inherit; }
 }
 .product-body h3 { font-size: 1.32rem; margin: 0; }
 .product-body p { margin: 0 0 6px; color: var(--gray-600); font-size: 0.93rem; flex: 1; }
-.product-body .link-arrow { align-self: flex-start; }
+.product-body .link-arrow {
+  align-self: flex-start;
+  margin-top: 4px;
+  padding: 9px 18px;
+  border: 1px solid var(--gray-200);
+  border-radius: 999px;
+  font-size: 0.87rem;
+  transition: color 0.25s var(--ease), background 0.25s var(--ease), border-color 0.25s var(--ease);
+}
+.product-body .link-arrow:hover {
+  background: var(--accent);
+  border-color: var(--accent);
+  color: var(--white);
+}
+.product-body .link-arrow:active { transform: translateY(1px); }
 
 /* ------------------------------ Nosotros -------------------------------- */
 .about-grid {
@@ -663,7 +733,8 @@ button { font-family: inherit; }
   transition: background 0.25s var(--ease), border-color 0.25s var(--ease),
     color 0.25s var(--ease), transform 0.25s var(--ease);
 }
-.social-buttons a:hover { background: var(--black); border-color: var(--black); color: var(--white); transform: translateY(-2px); }
+.info-card .social-buttons a:hover { background: var(--accent); border-color: var(--accent); color: var(--white); transform: translateY(-2px); }
+.info-card .social-buttons a:active { transform: translateY(0); }
 .social-buttons svg { width: 18px; height: 18px; flex: 0 0 auto; }
 
 .contact-cta {
@@ -719,7 +790,8 @@ button { font-family: inherit; }
   color: rgba(255, 255, 255, 0.8);
   transition: background 0.25s var(--ease), color 0.25s var(--ease), transform 0.25s var(--ease);
 }
-.social-list a:hover { background: var(--white); color: var(--black); border-color: var(--white); transform: translateY(-3px); }
+.social-list a:hover { background: var(--accent); color: var(--white); border-color: var(--accent); transform: translateY(-3px); }
+.social-list a:active { transform: translateY(-1px); }
 .social-list svg { width: 19px; height: 19px; }
 .footer-bottom {
   display: flex;
@@ -750,6 +822,7 @@ button { font-family: inherit; }
   transition: transform 0.25s var(--ease), background 0.25s var(--ease);
 }
 .whatsapp-fab:hover { transform: scale(1.07); background: var(--accent-dark); }
+.whatsapp-fab:active { transform: scale(0.98); }
 .whatsapp-fab svg { width: 30px; height: 30px; }
 
 /* -------------------- Camino decorativo de huellas ---------------------- */

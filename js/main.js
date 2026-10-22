@@ -6,7 +6,7 @@
 (function () {
   "use strict";
 
-  var config = window.SITE_CONFIG || {};
+  var config = {};
 
   function isConfigured(value) {
     return typeof value === "string" && value.trim() !== "";
@@ -312,6 +312,52 @@
     sections.forEach(function (section) { observer.observe(section); });
   }
 
+  /* ----------------------- Filtros de productos ------------------------- */
+  /* Botonera Todos / Perros / Gatos. Clasifica cada tarjeta por su atributo
+     [data-pet] (uno o varios valores separados por espacios: "perro gato").
+     Los productos compartidos se muestran en ambas categorías. Si no hay
+     markup de filtros, no hace nada (degradable). */
+  function setupProductFilters() {
+    var bar = document.querySelector("[data-product-filters]");
+    if (!bar) return;
+
+    var chips = Array.prototype.slice.call(bar.querySelectorAll("[data-filter]"));
+    var cards = Array.prototype.slice.call(document.querySelectorAll(".product-card[data-pet]"));
+    if (!chips.length || !cards.length) return;
+
+    function apply(filter) {
+      Array.prototype.forEach.call(chips, function (chip) {
+        var active = chip.getAttribute("data-filter") === filter;
+        chip.classList.toggle("is-active", active);
+        chip.setAttribute("aria-pressed", active ? "true" : "false");
+      });
+      Array.prototype.forEach.call(cards, function (card) {
+        var pets = (card.getAttribute("data-pet") || "").split(/\s+/);
+        var show = filter === "all" || pets.indexOf(filter) !== -1;
+        card.hidden = !show;
+        /* Si la tarjeta vuelve a mostrarse, asegurar su animación de
+           aparición (pudo quedar sin observar mientras estaba oculta). */
+        if (show) card.classList.add("in-view");
+      });
+    }
+
+    Array.prototype.forEach.call(chips, function (chip, i) {
+      chip.addEventListener("click", function () {
+        apply(chip.getAttribute("data-filter"));
+      });
+      chip.addEventListener("keydown", function (event) {
+        var dir = event.key === "ArrowRight" ? 1 : (event.key === "ArrowLeft" ? -1 : 0);
+        if (!dir) return;
+        event.preventDefault();
+        var next = chips[(i + dir + chips.length) % chips.length];
+        next.focus();
+        apply(next.getAttribute("data-filter"));
+      });
+    });
+
+    apply("all");
+  }
+
   /* --------------------- Animaciones de aparición ----------------------- */
   function setupReveal() {
     var items = document.querySelectorAll("[data-reveal]");
@@ -338,8 +384,40 @@
     window.setTimeout(revealAll, 1600);
   }
 
+  /* ------------------------------- Datos -------------------------------- */
+  /* Traduce data/sitio.json al formato que ya consumen las funciones de
+     arriba, para no duplicar la lógica de WhatsApp / Maps / visibilidad. */
+  function setConfig(sitio) {
+    var neg = (sitio && sitio.negocio) || {};
+    var redes = (sitio && sitio.redes) || {};
+    function url(key) { return redes[key] && redes[key].url; }
+
+    config = {
+      whatsapp: neg.whatsapp,
+      whatsappDisplay: neg.whatsappDisplay,
+      whatsappDefaultMessage: neg.whatsappMensaje,
+      phone: neg.phone,
+      email: neg.email,
+      address: neg.address,
+      hours: neg.hours,
+      mapsQuery: neg.mapsQuery,
+      carouselDelay: neg.carouselDelay,
+      instagram: url("instagram"),
+      tiktok: url("tiktok"),
+      facebook: url("facebook")
+    };
+    window.SITE_CONFIG = config;
+  }
+
+  function loadJSON(path) {
+    return fetch(path, { cache: "no-store" }).then(function (res) {
+      if (!res.ok) throw new Error("HTTP " + res.status + " al cargar " + path);
+      return res.json();
+    });
+  }
+
   /* ------------------------------- Init --------------------------------- */
-  function init() {
+  function startup() {
     try {
       setupVisibility();
       setupWhatsAppLinks();
@@ -347,6 +425,7 @@
       setupConfigFields();
       setupYear();
       setupCarousels();
+      setupProductFilters();
       setupMobileMenu();
       setupHeaderScroll();
       setupScrollSpy();
@@ -358,9 +437,39 @@
     }
   }
 
+  function showLoadError(error) {
+    document.documentElement.classList.remove("js");
+    if (window.console) console.error("No se pudo cargar el contenido del sitio:", error);
+    var main = document.querySelector("main");
+    if (!main || main.innerHTML.trim() !== "") return;
+    main.innerHTML =
+      '<section class="section"><div class="container">' +
+      "<h2>No se pudo cargar el contenido</h2>" +
+      "<p>Este sitio carga sus datos desde archivos JSON y necesita abrirse desde un servidor web. " +
+      "Si lo estás viendo de forma local, iniciá un servidor (por ejemplo <code>python -m http.server</code>) " +
+      "y volvé a cargar la página.</p></div></section>";
+  }
+
+  /* 1) cargar datos  2) renderizar  3) iniciar interacciones  4) huellas */
+  function boot() {
+    Promise.all([loadJSON("data/sitio.json"), loadJSON("data/pagina.json")])
+      .then(function (res) {
+        setConfig(res[0]);
+        if (typeof window.renderSite === "function") {
+          window.renderSite(res[0], res[1]);
+        }
+        startup();
+        if (typeof window.renderPawTrails === "function") {
+          window.renderPawTrails();
+        }
+      })
+      .catch(showLoadError);
+  }
+
   if (document.readyState === "loading") {
-    document.addEventListener("DOMContentLoaded", init);
+    document.addEventListener("DOMContentLoaded", boot);
   } else {
-    init();
+    boot();
   }
 })();
+

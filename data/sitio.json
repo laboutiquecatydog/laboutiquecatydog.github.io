@@ -1,0 +1,42 @@
+{
+  "marca": {
+    "logo": "assets/img/logo.png",
+    "logoAlt": "Logotipo de La Boutique Cat & Dog",
+    "nombre": "La Boutique",
+    "nombreSecundario": "Cat & Dog",
+    "ariaLabel": "La Boutique Cat & Dog — Inicio"
+  },
+  "negocio": {
+    "whatsapp": "543874578676",
+    "whatsappDisplay": "+54 9 387 457-8676",
+    "whatsappMensaje": "Hola, quisiera consultar por sus productos para mascotas",
+    "phone": "",
+    "email": "laboutiquecatydog@gmail.com",
+    "address": "Diario La Nación y Diario El Litoral, Bº Periodista, Salta",
+    "hours": "Lun a Sáb de 10:00 a 13:00 h · Dom cerrado",
+    "mapsQuery": "-24.8445087,-65.4390905",
+    "carouselDelay": 3000
+  },
+  "redes": {
+    "instagram": { "url": "https://www.instagram.com/laboutiquecatydog/", "etiqueta": "Instagram" },
+    "tiktok": { "url": "https://www.tiktok.com/@laboutiquecatydog", "etiqueta": "TikTok" },
+    "facebook": { "url": "https://www.facebook.com/685608634637906", "etiqueta": "Facebook" }
+  },
+  "nav": [
+    { "texto": "Inicio", "ancla": "#inicio" },
+    { "texto": "Categorías", "ancla": "#categorias" },
+    { "texto": "Productos", "ancla": "#productos" },
+    { "texto": "Nosotros", "ancla": "#nosotros" },
+    { "texto": "Contacto", "ancla": "#contacto" }
+  ],
+  "navCtaTexto": "WhatsApp",
+  "footer": {
+    "descripcion": "Productos para perros y gatos, con atención cercana en el local.",
+    "seccionesTitulo": "Secciones",
+    "contactoTitulo": "Contacto",
+    "seguinosTitulo": "Seguinos",
+    "ordenSocial": ["instagram", "facebook", "tiktok"],
+    "whatsappTexto": "WhatsApp",
+    "copyright": "La Boutique Cat & Dog. Todos los derechos reservados."
+  }
+}

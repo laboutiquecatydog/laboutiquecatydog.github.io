@@ -222,6 +222,13 @@
     });
   }
 
+  /* El contenido se renderiza de forma asíncrona desde data/*.json:
+     main.js vuelve a dibujar las huellas cuando termina el render. */
+  window.renderPawTrails = function () {
+    var mainEl = document.querySelector("main");
+    if (mainEl) { renderTrails(mainEl); }
+  };
+
   try {
     if (document.readyState === "loading") {
       document.addEventListener("DOMContentLoaded", init);

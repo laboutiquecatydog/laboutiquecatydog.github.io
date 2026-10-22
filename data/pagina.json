@@ -1,0 +1,173 @@
+{
+  "secciones": [
+    {
+      "tipo": "hero",
+      "huella": "izquierda",
+      "id": "inicio",
+      "aria": "Bienvenida",
+      "eyebrow": "Tienda de productos para mascotas",
+      "titulo": "Todo para tus **perros** y **gatos**",
+      "texto": "Alimento, accesorios, higiene y todo lo que tu mascota necesita, con atención cercana y asesoramiento en el local.",
+      "botonPrincipal": { "texto": "Consultar por WhatsApp", "mensaje": "Hola, quisiera consultar por sus productos para mascotas" },
+      "botonSecundario": { "texto": "Ver productos", "enlace": "#productos" },
+      "carruselAria": "Fotografías de La Boutique Cat & Dog",
+      "slides": [
+        {
+          "imagen": "assets/img/slide-1.jpg",
+          "srcset": "assets/img/slide-1-900.jpg 900w, assets/img/slide-1.jpg 1600w",
+          "sizes": "(max-width: 860px) 100vw, 50vw",
+          "alt": "Interior de La Boutique Cat & Dog con productos para mascotas",
+          "ancho": 1600,
+          "alto": 738,
+          "prioridad": true
+        },
+        {
+          "imagen": "assets/img/slide-2.jpg",
+          "srcset": "assets/img/slide-2-900.jpg 900w, assets/img/slide-2.jpg 1600w",
+          "sizes": "(max-width: 860px) 100vw, 50vw",
+          "alt": "Productos y accesorios para perros y gatos en La Boutique",
+          "ancho": 1600,
+          "alto": 737
+        },
+        {
+          "imagen": "assets/img/slide-3.jpg",
+          "srcset": "assets/img/slide-3-900.jpg 900w, assets/img/slide-3.jpg 1527w",
+          "sizes": "(max-width: 860px) 100vw, 50vw",
+          "alt": "Vitrina de La Boutique Cat & Dog",
+          "ancho": 1527,
+          "alto": 704
+        }
+      ]
+    },
+    {
+      "tipo": "categorias",
+      "huella": "derecha",
+      "id": "categorias",
+      "eyebrow": "Categorías",
+      "titulo": "¿Para quién estás buscando?",
+      "intro": "Alimento, accesorios y cuidados para tu perro o tu gato, todo en un mismo lugar.",
+      "ctaTexto": "Ver productos",
+      "tarjetas": [
+        {
+          "imagen": "assets/img/seccion-perros.jpg",
+          "alt": "Perros",
+          "ancho": 1280,
+          "alto": 720,
+          "titulo": "Perros",
+          "texto": "Alimento, accesorios, higiene y todo para el cuidado diario de tu perro.",
+          "enlace": "#productos"
+        },
+        {
+          "imagen": "assets/img/seccion-gatos.jpg",
+          "alt": "Gatos",
+          "ancho": 1280,
+          "alto": 698,
+          "titulo": "Gatos",
+          "texto": "Alimento, accesorios y cuidado pensado para el bienestar de tu gato.",
+          "enlace": "#productos"
+        }
+      ]
+    },
+    {
+      "tipo": "productos",
+      "huella": "derecha",
+      "id": "productos",
+      "eyebrow": "Productos destacados",
+      "titulo": "Lo más buscado",
+      "intro": "Algunos de los productos que encontrás en el local. Escribinos por WhatsApp y te confirmamos disponibilidad.",
+      "mostrarFiltros": true,
+      "ctaTexto": "Consultar disponibilidad",
+      "productos": [
+        {
+          "etiqueta": "Perros y gatos",
+          "titulo": "Alimento y nutrición",
+          "descripcion": "Alimento balanceado y opciones de nutrición para cada etapa de tu mascota.",
+          "mascotas": "perro gato",
+          "precio": "",
+          "mensajeWhatsApp": "Hola, quisiera consultar por alimento y nutrición para mascotas",
+          "fotos": [
+            { "foto": "assets/img/alimento-1.jpg", "alt": "Alimento y nutrición para perros y gatos" },
+            { "foto": "assets/img/alimento-2.jpg", "alt": "Bolsas de alimento balanceado para perros Fawna" }
+          ]
+        },
+        {
+          "etiqueta": "Descanso",
+          "titulo": "Camas y descanso",
+          "descripcion": "Camas y rincones cómodos para que tu mascota descanse tranquila.",
+          "mascotas": "perro gato",
+          "precio": "",
+          "mensajeWhatsApp": "Hola, quisiera consultar por camas y descanso para mascotas",
+          "fotos": [
+            { "foto": "assets/img/camas-1.jpg", "alt": "Cama fucsia para mascotas" },
+            { "foto": "assets/img/camas-2.jpg", "alt": "Cama para mascotas" },
+            { "foto": "assets/img/camas-3.jpg", "alt": "Cama y rincón de descanso para mascotas" }
+          ]
+        },
+        {
+          "etiqueta": "Mochilas y transportadoras",
+          "titulo": "Transporte",
+          "descripcion": "Mochilas y transportadoras con ventana, ideales para pasear y viajar con tu gato.",
+          "mascotas": "gato",
+          "precio": "",
+          "mensajeWhatsApp": "Hola, quisiera consultar por mochilas transportadoras para mascotas",
+          "fotos": [
+            { "foto": "assets/img/transporte-1.jpg", "alt": "Mochila transportadora para gatos con ventana burbuja" },
+            { "foto": "assets/img/transporte-2.jpg", "alt": "Mochila transportadora con ventana burbuja, vista lateral" }
+          ]
+        },
+        {
+          "etiqueta": "Accesorios",
+          "titulo": "Accesorios y más",
+          "descripcion": "Collares, correas, comederos y todo lo que suma al día a día.",
+          "mascotas": "perro gato",
+          "precio": "",
+          "mensajeWhatsApp": "Hola, quisiera consultar por accesorios para mascotas",
+          "fotos": [
+            { "foto": "assets/img/accesorios-1.jpg", "alt": "Accesorios y productos para mascotas" },
+            { "foto": "assets/img/accesorios-2.jpg", "alt": "Accesorios para mascotas" }
+          ]
+        },
+        {
+          "etiqueta": "Juguetes",
+          "titulo": "Juguetes para ellos",
+          "descripcion": "Juguetes para el juego y el entretenimiento diario de tus mascotas.",
+          "mascotas": "perro",
+          "precio": "",
+          "mensajeWhatsApp": "Hola, quisiera consultar por juguetes para mascotas",
+          "fotos": [
+            { "foto": "assets/img/juguetes-1.jpg", "alt": "Juguetes GiGwi para perros" }
+          ]
+        }
+      ]
+    },
+    {
+      "tipo": "imagenTexto",
+      "huella": "izquierda",
+      "id": "nosotros",
+      "eyebrow": "Nuestro local",
+      "titulo": "Una tienda pensada para el bienestar de tu mascota",
+      "texto": "La Boutique Cat & Dog es una tienda de productos para mascotas. Nos dedicamos a ofrecer una atención personalizada y una selección de productos para perros y gatos.",
+      "vinetas": [
+        "Atención personalizada en el local",
+        "Productos para perros y gatos",
+        "Asesoramiento para elegir lo mejor"
+      ],
+      "imagen": "assets/img/local.jpg",
+      "imagenAlt": "Fachada de La Boutique Cat & Dog",
+      "imagenAncho": 449,
+      "imagenAlto": 660,
+      "boton": { "texto": "Hacé tu consulta", "mensaje": "Hola, quisiera consultar por sus productos para mascotas" }
+    },
+    {
+      "tipo": "contacto",
+      "huella": "derecha",
+      "id": "contacto",
+      "eyebrow": "Contacto",
+      "titulo": "Hablemos por WhatsApp",
+      "intro": "Consultanos por productos, disponibilidad y atención en el local.",
+      "botonWhatsapp": { "texto": "Escribinos por WhatsApp", "mensaje": "Hola, quisiera consultar por sus productos para mascotas" },
+      "botonMapsTexto": "Cómo llegar",
+      "ordenSocial": ["instagram", "tiktok", "facebook"]
+    }
+  ]
+}
