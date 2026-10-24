@@ -18,16 +18,40 @@
     "carouselDelay": 3000
   },
   "redes": {
-    "instagram": { "url": "https://www.instagram.com/laboutiquecatydog/", "etiqueta": "Instagram" },
-    "tiktok": { "url": "https://www.tiktok.com/@laboutiquecatydog", "etiqueta": "TikTok" },
-    "facebook": { "url": "https://www.facebook.com/685608634637906", "etiqueta": "Facebook" }
+    "instagram": {
+      "url": "https://www.instagram.com/laboutiquecatydog/",
+      "etiqueta": "Instagram"
+    },
+    "tiktok": {
+      "url": "https://www.tiktok.com/@laboutiquecatydog",
+      "etiqueta": "TikTok"
+    },
+    "facebook": {
+      "url": "https://www.facebook.com/685608634637906",
+      "etiqueta": "Facebook"
+    }
   },
   "nav": [
-    { "texto": "Inicio", "ancla": "#inicio" },
-    { "texto": "Categorías", "ancla": "#categorias" },
-    { "texto": "Productos", "ancla": "#productos" },
-    { "texto": "Nosotros", "ancla": "#nosotros" },
-    { "texto": "Contacto", "ancla": "#contacto" }
+    {
+      "texto": "Inicio",
+      "ancla": "#inicio"
+    },
+    {
+      "texto": "Categorías",
+      "ancla": "#categorias"
+    },
+    {
+      "texto": "Productos",
+      "ancla": "#productos"
+    },
+    {
+      "texto": "Nosotros",
+      "ancla": "#nosotros"
+    },
+    {
+      "texto": "Contacto",
+      "ancla": "#contacto"
+    }
   ],
   "navCtaTexto": "WhatsApp",
   "footer": {
@@ -35,7 +59,11 @@
     "seccionesTitulo": "Secciones",
     "contactoTitulo": "Contacto",
     "seguinosTitulo": "Seguinos",
-    "ordenSocial": ["instagram", "facebook", "tiktok"],
+    "ordenSocial": [
+      "instagram",
+      "facebook",
+      "tiktok"
+    ],
     "whatsappTexto": "WhatsApp",
     "copyright": "La Boutique Cat & Dog. Todos los derechos reservados."
   }
