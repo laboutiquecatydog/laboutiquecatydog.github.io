@@ -175,20 +175,6 @@
               "alt": "Juguetes GiGwi para perros"
             }
           ]
-        },
-        {
-          "etiqueta": "prueba gaga",
-          "titulo": "Producto nuevo",
-          "descripcion": "xdddddd",
-          "mascotas": "perro gato",
-          "precio": "5000000",
-          "mensajeWhatsApp": "",
-          "fotos": [
-            {
-              "foto": "assets/img/logo.png",
-              "alt": ""
-            }
-          ]
         }
       ]
     },
@@ -198,7 +184,7 @@
       "id": "nosotros",
       "eyebrow": "Nuestro local",
       "titulo": "Una tienda pensada para el bienestar de tu mascota",
-      "texto": "La Boutique Cat & Dog es una tienda de productos para mascotas. Nos dedicamos a ofrecer una atención personalizada y una selección de productos para perros y gatos.",
+      "texto": "Nuestro local",
       "vinetas": [
         "Atención personalizada en el local",
         "Productos para perros y gatos",
