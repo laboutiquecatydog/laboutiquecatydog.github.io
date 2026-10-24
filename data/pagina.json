@@ -175,6 +175,20 @@
               "alt": "Juguetes GiGwi para perros"
             }
           ]
+        },
+        {
+          "etiqueta": "prueba gaga",
+          "titulo": "Producto nuevo",
+          "descripcion": "xdddddd",
+          "mascotas": "perro gato",
+          "precio": "5000",
+          "mensajeWhatsApp": "",
+          "fotos": [
+            {
+              "foto": "assets/img/logo.png",
+              "alt": ""
+            }
+          ]
         }
       ]
     },
