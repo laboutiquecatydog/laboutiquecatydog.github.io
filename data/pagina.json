@@ -5,17 +5,11 @@
       "huella": "izquierda",
       "id": "inicio",
       "aria": "Bienvenida",
-      "eyebrow": "Tienda de productos para mascotas.",
-      "titulo": "Todo para tus **perros** y **gatos**",
-      "texto": "Alimento, accesorios, higiene y todo lo que tu mascota necesita, con atención cercana y asesoramiento en el local.",
-      "botonPrincipal": {
-        "texto": "Consultar por WhatsApp",
-        "mensaje": "Hola, quisiera consultar por sus productos para mascotas"
-      },
-      "botonSecundario": {
-        "texto": "Ver productos",
-        "enlace": "#productos"
-      },
+      "eyebrow": "Boutique para mascotas",
+      "titulo": "Todo para **perros** y **gatos**, en un solo lugar",
+      "texto": "Alimento, accesorios y productos de cuidado para acompañarlos todos los días. Una selección pensada para el bienestar de tu mascota, con atención cercana en nuestro local de Salta.",
+      "botonPrincipal": { "texto": "Consultar por WhatsApp", "mensaje": "Hola, quisiera consultar por sus productos para mascotas" },
+      "botonSecundario": { "texto": "Ver categorías", "enlace": "#categorias" },
       "carruselAria": "Fotografías de La Boutique Cat & Dog",
       "slides": [
         {
@@ -53,7 +47,7 @@
       "id": "categorias",
       "eyebrow": "Categorías",
       "titulo": "¿Para quién estás buscando?",
-      "intro": "Alimento, accesorios y cuidados para tu perro o tu gato, todo en un mismo lugar.",
+      "intro": "Todo para el día a día de tu mascota, ya sea perro o gato.",
       "ctaTexto": "Ver productos",
       "tarjetas": [
         {
@@ -81,8 +75,9 @@
       "huella": "derecha",
       "id": "productos",
       "eyebrow": "Productos destacados",
-      "titulo": "Lo más buscado",
-      "intro": "Algunos de los productos que encontrás en el local. Escribinos por WhatsApp y te confirmamos disponibilidad.",
+      "titulo": "Un vistazo a nuestra selección",
+      "intro": "Algunos de los productos que encontrás en el local. Escribinos por WhatsApp y te contamos qué hay disponible.",
+      "mostrarFiltros": true,
       "ctaTexto": "Consultar disponibilidad",
       "mostrarFiltros": true,
       "productos": [
@@ -183,8 +178,8 @@
       "huella": "izquierda",
       "id": "nosotros",
       "eyebrow": "Nuestro local",
-      "titulo": "Una tienda pensada para el bienestar de tu mascota",
-      "texto": "Nuestro local",
+      "titulo": "Una tienda pensada para ellos",
+      "texto": "En La Boutique Cat & Dog elegimos cada producto pensando en el bienestar de tu mascota. Te acompañamos con atención personalizada para que encuentres lo que buscás.",
       "vinetas": [
         "Atención personalizada en el local",
         "Productos para perros y gatos",
@@ -204,12 +199,9 @@
       "huella": "derecha",
       "id": "contacto",
       "eyebrow": "Contacto",
-      "titulo": "Hablemos por WhatsApp",
-      "intro": "Consultanos por productos, disponibilidad y atención en el local.",
-      "botonWhatsapp": {
-        "texto": "Escribinos por WhatsApp",
-        "mensaje": "Hola, quisiera consultar por sus productos para mascotas"
-      },
+      "titulo": "¿Buscás algo en particular?",
+      "intro": "Escribinos y te ayudamos a encontrarlo. También podés visitarnos en el local, en el barrio Periodista de Salta.",
+      "botonWhatsapp": { "texto": "Escribinos por WhatsApp", "mensaje": "Hola, quisiera consultar por sus productos para mascotas" },
       "botonMapsTexto": "Cómo llegar",
       "ordenSocial": [
         "instagram",

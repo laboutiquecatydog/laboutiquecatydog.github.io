@@ -1,7 +1,10 @@
 ﻿/* ==========================================================================
    La Boutique Cat & Dog â€” Hoja de estilos principal
-   Estilo editorial: blanco, negro y gris cÃ¡lido, con rojo discreto.
+   Estilo editorial: blanco, negro, neutros cÃ¡lidos y rojo de marca como acento.
    TipografÃ­a: Playfair Display (tÃ­tulos) + Inter (texto).
+   Sistema: tokens de color/espaciado, animaciones de entrada y reveal,
+   microinteracciones sutiles. Todo con transform/opacity y respetando
+   prefers-reduced-motion.
    ========================================================================== */
 
 /* ----------------------------- Variables -------------------------------- */
@@ -10,13 +13,14 @@
   --ink: #1c1c1c;
   --white: #ffffff;
 
-  --gray-50: #faf9f8;
-  --gray-100: #f4f3f1;
-  --gray-150: #ededea;
-  --gray-200: #e5e4e0;
-  --gray-300: #d4d3ce;
-  --gray-600: #66655f;
-  --gray-700: #433f3b;
+  /* Neutros cÃ¡lidos (arena) para dar calidez sin romper la paleta de marca. */
+  --gray-50: #faf8f5;
+  --gray-100: #f5f2ed;
+  --gray-150: #edeae4;
+  --gray-200: #e4e0d8;
+  --gray-300: #d3cec4;
+  --gray-600: #6a655d;
+  --gray-700: #443f39;
 
   --accent: #c0272d;
   --accent-dark: #9c1d22;
@@ -33,6 +37,18 @@
 
   --container: 1180px;
   --header-h: 78px;
+
+  /* Ritmo vertical y escalas tipogrÃ¡ficas.
+     Un solo lugar para ajustar el "aire" editorial del sitio. */
+  --space-section: clamp(72px, 9vw, 128px);
+  --measure: 62ch;
+
+  /* Curvas de animaciÃ³n coherentes en todo el sitio. */
+  --dur-1: 0.22s;
+  --dur-2: 0.4s;
+  --dur-3: 0.7s;
+  --ease-out: cubic-bezier(0.22, 0.61, 0.36, 1);
+  --ease-soft: cubic-bezier(0.19, 1, 0.22, 1);
 
   /* Sello de marca: huella limpia y proporcionada (cuatro dedos) con la
      almohadilla central en forma de corazon rojo de marca. Trazado propio
@@ -109,7 +125,7 @@ button { font-family: inherit; }
   padding-right: max(22px, env(safe-area-inset-right));
 }
 
-.section { padding: clamp(70px, 9vw, 122px) 0; }
+.section { padding: var(--space-section) 0; }
 
 .section-alt { background: var(--gray-50); }
 
@@ -119,9 +135,24 @@ button { font-family: inherit; }
 #categorias { padding-bottom: clamp(40px, 5vw, 64px); }
 #productos { padding-top: clamp(56px, 6.5vw, 88px); }
 
-.section-head { max-width: 660px; margin: 0 auto clamp(40px, 5vw, 64px); text-align: center; }
-.section-head h2 { font-size: clamp(2rem, 4.2vw, 2.9rem); margin-bottom: 0.35em; }
-.section-intro { color: var(--gray-600); font-size: 1.04rem; margin: 0; }
+.section-head { max-width: 680px; margin: 0 auto clamp(44px, 5.5vw, 68px); text-align: center; }
+.section-head h2 {
+  font-size: clamp(2.05rem, 4.4vw, 3rem);
+  line-height: 1.08;
+  margin-bottom: 0.4em;
+}
+.section-intro { color: var(--gray-600); font-size: clamp(1rem, 1.4vw, 1.08rem); margin: 0; max-width: 54ch; margin-inline: auto; }
+
+/* Filete de marca bajo el encabezado de secciÃ³n: detalle editorial discreto. */
+.section-head h2::after {
+  content: "";
+  display: block;
+  width: 46px;
+  height: 3px;
+  margin: 0.85em auto 0;
+  background: var(--accent);
+  border-radius: 2px;
+}
 
 .eyebrow {
   display: inline-block;
@@ -130,8 +161,8 @@ button { font-family: inherit; }
   font-weight: 700;
   letter-spacing: 0.22em;
   text-transform: uppercase;
-  color: var(--gray-600);
-  margin: 0 0 0.85em;
+  color: var(--accent);
+  margin: 0 0 0.9em;
 }
 
 /* Sello de marca junto al label de la bienvenida (un solo punto, discreto). */
@@ -392,23 +423,24 @@ button { font-family: inherit; }
 .hero-grid {
   display: grid;
   grid-template-columns: 1.05fr 0.95fr;
-  gap: clamp(32px, 5vw, 68px);
+  gap: clamp(32px, 5vw, 72px);
   align-items: center;
-  padding-top: clamp(48px, 6vw, 76px);
-  padding-bottom: clamp(48px, 6vw, 76px);
+  padding-top: clamp(52px, 6.5vw, 88px);
+  padding-bottom: clamp(52px, 6.5vw, 88px);
 }
 .hero-copy { max-width: 46rem; }
 .hero-title {
-  font-size: clamp(2.2rem, 5.2vw, 3.7rem);
-  line-height: 1.04;
-  letter-spacing: -0.02em;
-  margin: 0 0 0.4em;
+  font-size: clamp(2.3rem, 5.4vw, 4rem);
+  line-height: 1.03;
+  letter-spacing: -0.025em;
+  margin: 0 0 0.42em;
+  min-height: 1.1em;
 }
 .hero-lead {
   color: var(--gray-600);
-  font-size: clamp(1.02rem, 1.6vw, 1.18rem);
+  font-size: clamp(1.02rem, 1.6vw, 1.2rem);
   max-width: 46ch;
-  margin: 0 0 1.8em;
+  margin: 0 0 2em;
 }
 .hero-actions { display: flex; flex-wrap: wrap; gap: 14px; }
 
@@ -525,28 +557,56 @@ button { font-family: inherit; }
 .filter-chip.is-active { background: var(--black); border-color: var(--black); color: var(--white); }
 
 .product-grid {
-  display: flex;
-  flex-wrap: wrap;
-  justify-content: center;
-  gap: clamp(24px, 3vw, 40px);
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+  gap: clamp(26px, 3vw, 42px);
+  align-items: start;
 }
 .product-card {
   display: flex;
   flex-direction: column;
-  flex: 1 1 320px;
-  max-width: 366px;
+  min-width: 0;
 }
 .product-card[hidden] { display: none; }
+/* Productos que están en otra página del catálogo */
+.product-card.fuera-de-pagina { display: none; }
 
-/* Carrusel de imÃ¡genes por cada categorÃ­a de productos */
+/* Paginación del catálogo: bloques de 6 productos por página */
+.product-pagination {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin-top: clamp(30px, 4vw, 46px);
+}
+.pp-btn, .pp-num {
+  display: inline-flex; align-items: center; justify-content: center;
+  width: 40px; height: 40px; padding: 0;
+  border: 1px solid var(--gray-300); border-radius: 50%;
+  background: var(--white); color: var(--ink);
+  font-family: var(--font-body); font-size: 0.92rem; line-height: 1;
+  cursor: pointer;
+  transition: border-color var(--dur-1), background var(--dur-1), color var(--dur-1), transform var(--dur-1);
+}
+.pp-btn:hover:not(:disabled), .pp-num:hover:not(.is-activa) { border-color: var(--black); }
+.pp-btn:active:not(:disabled) { transform: translateY(1px); }
+.pp-btn:disabled, .pp-num:disabled { opacity: 0.35; cursor: default; }
+.pp-num.is-activa { background: var(--accent); border-color: var(--accent); color: var(--white); cursor: default; }
+.pp-sep { color: var(--gray-600); font-size: 0.9rem; }
+.pp-info { margin-left: 12px; font-size: 0.78rem; color: var(--gray-600); letter-spacing: 0.02em; }
+@media (max-width: 640px) { .pp-info { margin-left: 0; width: 100%; text-align: center; } }
+
+/* Carrusel de imÃ¡genes por cada categorÃa de productos */
 .product-carousel {
   position: relative;
   background: var(--gray-100);
   border-radius: var(--radius);
   overflow: hidden;
-  transition: box-shadow 0.3s var(--ease);
+  box-shadow: var(--shadow-sm);
+  transition: box-shadow var(--dur-2) var(--ease), transform var(--dur-2) var(--ease);
 }
-.product-card:hover .product-carousel { box-shadow: var(--shadow-sm); }
+.product-card:hover .product-carousel { box-shadow: var(--shadow); }
 .pc-viewport {
   position: relative;
   width: 100%;
@@ -559,10 +619,14 @@ button { font-family: inherit; }
   inset: 0;
   width: 100%;
   height: 100%;
-  object-fit: contain;
-  padding: 18px;
+  object-fit: cover;
   opacity: 0;
-  transition: opacity 0.5s var(--ease);
+  transition: opacity 0.5s var(--ease-out);
+}
+/* La foto activa hace un zoom casi imperceptible al pasar el cursor. */
+@media (hover: hover) {
+  .product-card:hover .pc-slide.is-active { transform: scale(1.045); }
+  .pc-slide.is-active { transition: opacity 0.5s var(--ease-out), transform 0.8s var(--ease-soft); }
 }
 .pc-slide.is-active { opacity: 1; }
 .pc-slide.is-error { display: none; }
@@ -626,31 +690,45 @@ button { font-family: inherit; }
 }
 .pc-dots .carousel-dot.is-active { width: 18px; background: var(--accent); border-color: var(--accent); }
 
-.product-body { display: flex; flex-direction: column; gap: 9px; padding: 22px 4px 0; flex: 1; }
+.product-body { display: flex; flex-direction: column; gap: 10px; padding: 24px 4px 0; flex: 1; }
 .product-tag {
-  font-size: 0.68rem;
+  align-self: flex-start;
+  font-size: 0.66rem;
   font-weight: 700;
-  letter-spacing: 0.16em;
+  letter-spacing: 0.14em;
   text-transform: uppercase;
-  color: var(--gray-600);
+  color: var(--accent);
+  padding: 4px 10px;
+  border: 1px solid rgba(192, 39, 45, 0.28);
+  border-radius: 999px;
 }
-.product-body h3 { font-size: 1.32rem; margin: 0; }
-.product-body p { margin: 0 0 6px; color: var(--gray-600); font-size: 0.93rem; flex: 1; }
+.product-body h3 { font-size: 1.34rem; margin: 0; }
+.product-body p { margin: 0; color: var(--gray-600); font-size: 0.94rem; flex: 1; }
+.product-price {
+  font-family: var(--font-heading);
+  font-size: 1.18rem;
+  font-weight: 700;
+  color: var(--black);
+  letter-spacing: -0.01em;
+}
 .product-body .link-arrow {
   align-self: flex-start;
-  margin-top: 4px;
-  padding: 9px 18px;
-  border: 1px solid var(--gray-200);
+  margin-top: 8px;
+  padding: 10px 20px;
+  border: 1px solid transparent;
   border-radius: 999px;
+  background: var(--accent);
+  color: var(--white);
   font-size: 0.87rem;
-  transition: color 0.25s var(--ease), background 0.25s var(--ease), border-color 0.25s var(--ease);
+  transition: background var(--dur-1) var(--ease), transform var(--dur-1) var(--ease),
+    box-shadow var(--dur-1) var(--ease);
 }
 .product-body .link-arrow:hover {
-  background: var(--accent);
-  border-color: var(--accent);
-  color: var(--white);
+  background: var(--accent-dark);
+  transform: translateY(-2px);
+  box-shadow: 0 12px 22px rgba(192, 39, 45, 0.22);
 }
-.product-body .link-arrow:active { transform: translateY(1px); }
+.product-body .link-arrow:active { transform: translateY(0); }
 
 /* ------------------------------ Nosotros -------------------------------- */
 .about-grid {
@@ -847,12 +925,76 @@ main { position: relative; }
 }
 
 /* -------------------------- Reveal animation ---------------------------- */
-/* ApariciÃ³n discreta (solo opacidad), sin desplazamientos decorativos. */
+/* ApariciÃ³n al entrar en pantalla: fundido + desplazamiento vertical muy
+   corto. Los grupos de tarjetas reciben un retraso escalonado mediante
+   --reveal-delay (lo asigna js/main.js), generando profundidad sin demorar
+   la lectura. Se ejecuta una sola vez por elemento. */
 html.js [data-reveal] {
   opacity: 0;
-  transition: opacity 0.6s var(--ease);
+  transform: translate3d(0, 18px, 0);
+  transition: opacity var(--dur-3) var(--ease-out),
+    transform var(--dur-3) var(--ease-out);
+  transition-delay: var(--reveal-delay, 0s);
 }
-html.js [data-reveal].in-view { opacity: 1; }
+html.js [data-reveal].in-view {
+  opacity: 1;
+  transform: translate3d(0, 0, 0);
+}
+
+/* ---------------------- Secuencia de entrada (hero) --------------------- */
+/* Encabezado, subtÃtulo y botones se revelan en cascada cuando el sitio
+   termina de cargar (clase .is-entered en <main>, la agrega js/main.js).
+   Solo si hay JS: sin JS el contenido se ve directamente. */
+html.js .hero .hero-copy > * {
+  opacity: 0;
+  transform: translate3d(0, 16px, 0);
+}
+html.js .hero.is-entered .hero-copy > * {
+  opacity: 1;
+  transform: translate3d(0, 0, 0);
+  transition: opacity var(--dur-3) var(--ease-out),
+    transform var(--dur-3) var(--ease-out);
+  transition-delay: calc(var(--i, 0) * 120ms + 120ms);
+}
+html.js .hero .hero-media {
+  opacity: 0;
+  transform: translate3d(0, 20px, 0) scale(0.985);
+}
+html.js .hero.is-entered .hero-media {
+  opacity: 1;
+  transform: none;
+  transition: opacity 0.9s var(--ease-soft), transform 0.9s var(--ease-soft);
+  transition-delay: 0.1s;
+}
+
+/* TÃtulo con efecto de escritura: un cursor finÃsimo parpadea mientras se
+   escribe y se retira al terminar. El texto real permanece en el DOM. */
+.hero-title .type-target { white-space: pre-wrap; }
+html.js .hero-title .type-caret {
+  display: inline-block;
+  width: 2px;
+  height: 0.92em;
+  margin-left: 0.06em;
+  background: var(--accent);
+  vertical-align: -0.08em;
+  animation: caret-blink 1s steps(1) infinite;
+}
+html.js .hero-title.is-typed .type-caret { display: none; }
+@keyframes caret-blink { 0%, 50% { opacity: 1; } 50.01%, 100% { opacity: 0; } }
+
+/* LÃnea de progreso de scroll: detalle funcional junto al reloj de marca. */
+.scroll-progress {
+  position: fixed;
+  top: 0;
+  left: 0;
+  height: 2px;
+  width: 100%;
+  transform: scaleX(0);
+  transform-origin: 0 50%;
+  background: var(--accent);
+  z-index: 1100;
+  pointer-events: none;
+}
 
 /* ---------------------------- Responsive -------------------------------- */
 @media (max-width: 1024px) {
@@ -944,12 +1086,22 @@ html.js [data-reveal].in-view { opacity: 1; }
 }
 
 /* ------------------------- Reduced motion ------------------------------- */
+/* Con movimiento reducido: sin transiciones ni animaciones, y todo el
+   contenido visible de entrada (nunca queda oculto esperando una animaciÃ³n). */
 @media (prefers-reduced-motion: reduce) {
   html { scroll-behavior: auto; }
   *, *::before, *::after {
     animation-duration: 0.001ms !important;
+    animation-iteration-count: 1 !important;
     transition-duration: 0.001ms !important;
+    transition-delay: 0ms !important;
   }
-  html.js [data-reveal] { opacity: 1; }
+  html.js [data-reveal],
+  html.js .hero .hero-copy > *,
+  html.js .hero .hero-media {
+    opacity: 1 !important;
+    transform: none !important;
+  }
+  html.js .hero-title .type-caret { display: none !important; }
 }
 

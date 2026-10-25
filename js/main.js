@@ -339,6 +339,9 @@
            aparición (pudo quedar sin observar mientras estaba oculta). */
         if (show) card.classList.add("in-view");
       });
+      /* El filtro cambia el catálogo visible: rearmar la paginación
+         desde la primera página. */
+      repaginarTodo();
     }
 
     Array.prototype.forEach.call(chips, function (chip, i) {
@@ -356,6 +359,118 @@
     });
 
     apply("all");
+  }
+
+  /* ---------------- Paginación del catálogo ------------------------------- */
+  /* Bloques de 6 productos por página con flechas y números que se generan
+     solos a medida que crece el catálogo. Pagina sobre los productos que el
+     filtro deja visibles. Sin JS (o con ≤6 productos) no cambia nada. */
+  var POR_PAGINA = 6;
+
+  function repaginarTodo() {
+    Array.prototype.forEach.call(document.querySelectorAll("[data-product-pagination]"), function (z) {
+      if (z.__bqIr) { z.__bqIr(1); }
+    });
+  }
+
+  function setupProductPagination() {
+    Array.prototype.forEach.call(document.querySelectorAll("[data-product-pagination]"), function (zona) {
+      var seccion = zona.closest ? (zona.closest("section") || document) : document;
+      var grid = seccion.querySelector(".product-grid");
+      if (!grid) return;
+
+      var pagina = 1;
+
+      function visibles() {
+        return Array.prototype.filter.call(grid.querySelectorAll(".product-card"), function (c) {
+          return !c.hidden;
+        });
+      }
+      function totalPaginas() {
+        return Math.max(1, Math.ceil(visibles().length / POR_PAGINA));
+      }
+
+      function boton(cls, texto, etiqueta, alClic, deshabilitado) {
+        var b = document.createElement("button");
+        b.type = "button";
+        b.className = cls;
+        b.textContent = texto;
+        if (etiqueta) { b.setAttribute("aria-label", etiqueta); }
+        if (deshabilitado) { b.disabled = true; }
+        b.addEventListener("click", alClic);
+        return b;
+      }
+
+      function pintar() {
+        var lista = visibles();
+        var total = totalPaginas();
+
+        Array.prototype.forEach.call(lista, function (card, i) {
+          var paginaDeCard = Math.floor(i / POR_PAGINA) + 1;
+          var mostrar = paginaDeCard === pagina;
+          card.classList.toggle("fuera-de-pagina", !mostrar);
+          if (mostrar) { card.classList.add("in-view"); }
+        });
+
+        if (total <= 1) {
+          zona.hidden = true;
+          zona.innerHTML = "";
+          return;
+        }
+
+        zona.hidden = false;
+        zona.innerHTML = "";
+
+        zona.appendChild(boton("pp-btn", "‹", "Página anterior", function () { ir(pagina - 1); }, pagina === 1));
+
+        /* Ventana de números: como máximo 7 botones, con «…» si hace falta */
+        var desde = Math.max(1, pagina - 3);
+        var hasta = Math.min(total, desde + 6);
+        desde = Math.max(1, hasta - 6);
+
+        if (desde > 1) {
+          zona.appendChild(boton("pp-num", "1", "Página 1", function () { ir(1); }));
+          var sep1 = document.createElement("span");
+          sep1.className = "pp-sep";
+          sep1.textContent = "…";
+          zona.appendChild(sep1);
+        }
+        for (var n = desde; n <= hasta; n++) {
+          (function (n) {
+            zona.appendChild(boton(
+              "pp-num" + (n === pagina ? " is-activa" : ""),
+              String(n),
+              "Página " + n,
+              function () { ir(n); }
+            ));
+          })(n);
+        }
+        if (hasta < total) {
+          var sep2 = document.createElement("span");
+          sep2.className = "pp-sep";
+          sep2.textContent = "…";
+          zona.appendChild(sep2);
+          zona.appendChild(boton("pp-num", String(total), "Página " + total, function () { ir(total); }));
+        }
+
+        zona.appendChild(boton("pp-btn", "›", "Página siguiente", function () { ir(pagina + 1); }, pagina === total));
+
+        var info = document.createElement("span");
+        info.className = "pp-info";
+        info.setAttribute("aria-live", "polite");
+        info.textContent = "Página " + pagina + " de " + total;
+        zona.appendChild(info);
+      }
+
+      function ir(n) {
+        var total = totalPaginas();
+        pagina = Math.min(Math.max(1, n), total);
+        pintar();
+      }
+
+      zona.__bqIr = ir;
+      pintar();
+    });
   }
 
   /* --------------------- Animaciones de aparición ----------------------- */
@@ -384,6 +499,128 @@
     window.setTimeout(revealAll, 1600);
   }
 
+  /* --------------------- Secuencia de entrada (hero) -------------------- */
+  /* El tÃtulo se escribe progresivamente y luego se revelan subtÃtulo y
+     botones en cascada (controlados por CSS con .is-entered y --i).
+     El texto real SIEMPRE estÃ¡ en el DOM: el efecto solo lo redibuja.
+     Se respeta prefers-reduced-motion y, sin JS, todo se ve directamente. */
+  function setupIntro() {
+    var hero = document.querySelector(".hero.intro");
+    if (!hero) return;
+
+    var reduce = false;
+    try { reduce = window.matchMedia("(prefers-reduced-motion: reduce)").matches; } catch (e) {}
+
+    /* Mostrar el bloque (subtÃtulo, botones, imagen) siempre. */
+    function enter() { hero.classList.add("is-entered"); }
+
+    var title = hero.querySelector(".hero-title[data-type]");
+    if (!title || reduce) { enter(); return; }
+
+    /* El tÃtulo puede tener marcado (**acento**). Se reconstruye como
+       secuencia de nodos de texto repetibles respetando los <span>. */
+    var caret = document.createElement("span");
+    caret.className = "type-caret";
+    caret.setAttribute("aria-hidden", "true");
+
+    var steps = [];
+    Array.prototype.forEach.call(title.childNodes, function (node) {
+      var text = node.nodeType === 3 ? node.nodeValue : null;
+      if (text != null) {
+        steps.push({ parent: title, anchor: node, text: text });
+      } else if (node.nodeType === 1) {
+        steps.push({ parent: node, el: node, text: node.textContent || "" });
+      }
+    });
+
+    /* Vaciar el texto conservando los contenedores, listo para reescribir. */
+    steps.forEach(function (step) {
+      if (step.anchor) { step.anchor.nodeValue = ""; }
+      else if (step.el) { step.el.textContent = ""; }
+    });
+    var si = 0, ci = 0;
+    var halted = false;
+    /* Velocidad natural: ~28 ms por carÃ¡cter, con arranque inmediato. */
+    var SPEED = 28;
+
+    function placeCaret() {
+      var step = steps[si];
+      if (step && step.el) { step.el.appendChild(caret); }
+      else { title.appendChild(caret); }
+    }
+
+    function tick() {
+      /* halted: el watchdog ya resolviÃ³ la secuencia; no seguir escribiendo. */
+      if (halted) return;
+      if (si >= steps.length) {
+        title.classList.add("is-typed");
+        if (caret.parentNode) { caret.parentNode.removeChild(caret); }
+        enter();
+        return;
+      }
+      var step = steps[si];
+      var full = step.text;
+      var done = false;
+      ci += 1;
+      var slice = full.slice(0, ci);
+      if (step.anchor) { step.anchor.nodeValue = slice; }
+      else if (step.el) { step.el.textContent = slice; }
+
+      if (ci >= full.length) { si += 1; ci = 0; done = true; }
+      placeCaret();
+      /* Pausa algo mayor al cerrar un segmento (**negrita**), casi nula
+         entre caracteres: ritmo de escritura natural. */
+      window.setTimeout(tick, done ? SPEED * 5 : SPEED);
+    }
+
+    /* PequeÃ±a pausa inicial para que la pÃ¡gina "se asiente" antes de escribir. */
+    placeCaret();
+    window.setTimeout(tick, 260);
+
+    /* Red de seguridad de la secuencia completa: si la escritura no terminÃ³
+       (pestaÃ±a en segundo plano, temporizadores limitados, cualquier fallo),
+       a los 6 s se muestra el tÃtulo completo, se retira el cursor y se
+       revela el resto del hero. Nunca deja botones invisibles esperando. */
+    window.setTimeout(function () {
+      if (!title.classList.contains("is-typed")) {
+        halted = true;
+        title.classList.add("is-typed");
+        Array.prototype.forEach.call(steps, function (step) {
+          if (step.anchor) { step.anchor.nodeValue = step.text; }
+          else if (step.el) { step.el.textContent = step.text; }
+        });
+        if (caret.parentNode) { caret.parentNode.removeChild(caret); }
+      }
+      enter();
+    }, 6000);
+  }
+
+  /* ------------------------ Progreso de scroll -------------------------- */
+  /* Barra fina de marca en el borde superior. Detalle funcional, sin costo. */
+  function setupScrollProgress() {
+    if (document.querySelector(".scroll-progress")) return;
+    var bar = document.createElement("div");
+    bar.className = "scroll-progress";
+    bar.setAttribute("aria-hidden", "true");
+    document.body.appendChild(bar);
+
+    var ticking = false;
+    function update() {
+      var doc = document.documentElement;
+      var max = doc.scrollHeight - doc.clientHeight;
+      var ratio = max > 0 ? (doc.scrollTop || window.pageYOffset) / max : 0;
+      if (ratio < 0) ratio = 0; else if (ratio > 1) ratio = 1;
+      bar.style.transform = "scaleX(" + ratio.toFixed(4) + ")";
+      ticking = false;
+    }
+    function onScroll() {
+      if (!ticking) { ticking = true; window.requestAnimationFrame(update); }
+    }
+    update();
+    window.addEventListener("scroll", onScroll, { passive: true });
+    window.addEventListener("resize", onScroll, { passive: true });
+  }
+
   /* ------------------------------- Datos -------------------------------- */
   /* Traduce data/sitio.json al formato que ya consumen las funciones de
      arriba, para no duplicar la lógica de WhatsApp / Maps / visibilidad. */
@@ -409,6 +646,109 @@
     window.SITE_CONFIG = config;
   }
 
+  /* ---------------------- Metadatos y SEO dinÃ¡micos --------------------- */
+  /* Mantiene <title>, description y Open Graph sincronizados con
+     data/sitio.json (evita que queden desactualizados). El <head> conserva
+     valores estÃ¡ticos de respaldo para buscadores que no ejecutan JS. */
+  function setMeta(selector, attr, value) {
+    if (!isConfigured(value)) return;
+    var el = document.querySelector(selector);
+    if (el) el.setAttribute(attr, value);
+  }
+
+  function updateSEO(sitio) {
+    var m = (sitio && sitio.marca) || {};
+    var neg = (sitio && sitio.negocio) || {};
+    var seo = (sitio && sitio.seo) || {};
+    var nombre = ((m.nombre || "") + " " + (m.nombreSecundario || "")).trim();
+    if (!nombre) nombre = "La Boutique Cat & Dog";
+
+    /* Título y descripción: editables desde el panel (sitio.seo), con
+       valores locales por defecto. Se recomienda título ≤ 60 caracteres
+       y descripción ≤ 155 para que Google no los corte. */
+    var title = isConfigured(seo.titulo)
+      ? String(seo.titulo)
+      : nombre + " | Tienda de mascotas en Salta";
+    var descripcion = isConfigured(seo.descripcion)
+      ? String(seo.descripcion)
+      : "Alimento, accesorios y productos de cuidado para perros y gatos en Salta. " +
+        "Consultanos por WhatsApp las marcas y la disponibilidad en el local.";
+
+    document.title = title;
+    setMeta('meta[name="description"]', "content", descripcion);
+    setMeta('meta[property="og:title"]', "content", title);
+    setMeta('meta[property="og:description"]', "content", descripcion);
+    setMeta('meta[property="og:site_name"]', "content", nombre);
+    setMeta('meta[name="twitter:title"]', "content", title);
+    setMeta('meta[name="twitter:description"]', "content", descripcion);
+    setMeta('meta[name="author"]', "content", nombre);
+
+    /* Datos estructurados (SEO local): se regeneran con los datos reales.
+       Las URLs van absolutas (los rastreadores las prefieren) y los
+       horarios se leen de negocio.hours, no hardcodeados. */
+    var ld = document.querySelector('script[type="application/ld+json"]');
+    if (ld && isConfigured(neg.whatsapp)) {
+      try {
+        var origen = location.origin;
+        var redes = (sitio && sitio.redes) || {};
+        var sameAs = ["instagram", "tiktok", "facebook"]
+          .map(function (k) { return redes[k] && redes[k].url; })
+          .filter(isConfigured);
+
+        /* Horarios: "Lun a Sáb de 10:00 a 13:00" → días + apertura/cierre.
+           Tolerante a variaciones; si no puede leerlos, usa el clásico
+           Lun-Sáb 10:00-13:00 del local. */
+        var dias = ["Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday"];
+        var abre = "10:00";
+        var cierra = "13:00";
+        var horasTexto = String(neg.hours || "");
+        var mAbre = horasTexto.match(/(\d{1,2}:\d{2})\s*(?:a|-|a las|hasta)\s*(\d{1,2}:\d{2})/i);
+        if (mAbre) {
+          abre = mAbre[1].length === 4 ? "0" + mAbre[1] : mAbre[1];
+          cierra = mAbre[2].length === 4 ? "0" + mAbre[2] : mAbre[2];
+        }
+
+        var data = {
+          "@context": "https://schema.org",
+          "@type": "PetStore",
+          "@id": origen + "/#negocio",
+          name: nombre,
+          description: descripcion,
+          url: origen + "/",
+          logo: origen + "/" + String(m.logo || "assets/img/logo.png"),
+          image: origen + "/assets/img/og-image.jpg",
+          priceRange: "$",
+          telephone: "+" + String(neg.whatsapp).replace(/[^0-9]/g, ""),
+          email: neg.email,
+          address: {
+            "@type": "PostalAddress",
+            streetAddress: neg.address,
+            addressLocality: "Salta",
+            addressRegion: "Salta",
+            addressCountry: "AR"
+          },
+          openingHoursSpecification: [{
+            "@type": "OpeningHoursSpecification",
+            dayOfWeek: dias,
+            opens: abre,
+            closes: cierra
+          }],
+          sameAs: sameAs
+        };
+        if (isConfigured(neg.mapsQuery)) {
+          var parts = String(neg.mapsQuery).split(",");
+          var lat = parseFloat(parts[0]), lng = parseFloat(parts[1]);
+          if (!isNaN(lat) && !isNaN(lng)) {
+            data.geo = { "@type": "GeoCoordinates", latitude: lat, longitude: lng };
+            data.hasMap = "https://www.google.com/maps/search/?api=1&query=" +
+              encodeURIComponent(neg.mapsQuery);
+          }
+        }
+        ld.textContent = JSON.stringify(data);
+      } catch (e) { /* SEO nunca debe romper el sitio */ }
+    }
+  }
+
   function loadJSON(path) {
     return fetch(path, { cache: "no-store" }).then(function (res) {
       if (!res.ok) throw new Error("HTTP " + res.status + " al cargar " + path);
@@ -424,12 +764,15 @@
       setupMapsLinks();
       setupConfigFields();
       setupYear();
-      setupCarousels();
-      setupProductFilters();
+    setupCarousels();
+    setupProductFilters();
+    setupProductPagination();
       setupMobileMenu();
       setupHeaderScroll();
       setupScrollSpy();
       setupReveal();
+      setupIntro();
+      setupScrollProgress();
     } catch (error) {
       /* Nunca dejar contenido oculto por un error de JS */
       document.documentElement.classList.remove("js");
@@ -455,12 +798,13 @@
     Promise.all([loadJSON("data/sitio.json"), loadJSON("data/pagina.json")])
       .then(function (res) {
         setConfig(res[0]);
+        updateSEO(res[0]);
         if (typeof window.renderSite === "function") {
           window.renderSite(res[0], res[1]);
         }
         startup();
         if (typeof window.renderPawTrails === "function") {
-          window.renderPawTrails();
+          window.renderPawTrails(res[1]);
         }
       })
       .catch(showLoadError);
@@ -471,5 +815,52 @@
   } else {
     boot();
   }
+
+  /* Gancho para el panel visual (/admin/editor.html): permite re-renderizar
+     la vista previa con los datos en edición y re-iniciar las interacciones
+     (carruseles, reveal, menú, filtros). En el sitio público nadie lo
+     llama; es inocuo. */
+  window.BQPreview = {
+    renderizar: function (sitio, pagina) {
+      try {
+        if (typeof window.renderSite === "function") {
+          window.renderSite(sitio, pagina);
+        }
+        /* renderSite reemplaza el <main> completo: las huellas se dibujan
+           de nuevo con el orden y los lados reales de esta versión. */
+        if (typeof window.renderPawTrails === "function") {
+          window.renderPawTrails(pagina);
+        }
+        this.reiniciar();
+      } catch (e) {
+        if (window.console) { console.warn("BQPreview.renderizar:", e); }
+      }
+    },
+    reiniciar: function () {
+      try {
+        setupVisibility();
+        setupConfigFields();
+        setupYear();
+        setupWhatsAppLinks();
+        setupMapsLinks();
+        setupMobileMenu();
+        setupCarousels();
+        setupReveal();
+        setupProductFilters();
+        setupProductPagination();
+        setupScrollSpy();
+        setupScrollProgress();
+        /* Sin typewriter en la vista previa: mostrar el hero completo */
+        var hero = document.querySelector(".hero.intro");
+        if (hero) {
+          hero.classList.add("is-entered");
+          var t = hero.querySelector(".hero-title[data-type]");
+          if (t) { t.classList.add("is-typed"); }
+        }
+      } catch (e) {
+        if (window.console) { console.warn("BQPreview.reiniciar:", e); }
+      }
+    }
+  };
 })();
 

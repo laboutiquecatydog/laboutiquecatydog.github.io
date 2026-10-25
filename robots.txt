@@ -1,0 +1,11 @@
+User-agent: *
+Allow: /
+
+# Panel de administración y archivos internos: fuera del índice de buscadores
+Disallow: /admin/
+Disallow: /graphify-out/
+Disallow: /_backup/
+Disallow: /*.cmd$
+
+# Sitemap
+Sitemap: https://laboutiquecatydog.github.io/sitemap.xml

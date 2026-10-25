@@ -1,12 +1,13 @@
 /* ==========================================================================
    La Boutique Cat & Dog — Caminos decorativos de huellas
    --------------------------------------------------------------------------
-   Dibuja VARIOS tramos de huellas (perro / gato alternados, sin corazones),
-   uno por sección, intercalados de izquierda y derecha:
-     .intro → izquierda · #categorias → derecha · #productos → derecha
-     #nosotros → izquierda · #contacto → derecha
-   En móvil (<640px) solo quedan los tramos de .intro y #contacto (lados
-   opuestos), como en el diseño anterior aprobado. Reglas:
+   Dibuja VARIOS tramos de huellas (perro / gato alternados), uno por
+   sección VISIBLE, siguiendo el orden real de data/pagina.json y el lado
+   que indica el campo "huella" de cada sección (izquierda / derecha;
+   "ninguna" saltea esa sección; sin valor se intercala solo). Así, si el
+   cliente reordena, agrega, oculta o duplica secciones desde el panel, el
+   camino acompaña en lugar de quedar desalineado.
+   En móvil (<640px) quedan solo el primer y el último tramo. Reglas:
    - Cada tramo vive dentro de su banda de sección (offsetTop/offsetHeight)
      y serpentea en la canaleta del borde de ventana correspondiente.
    - Y lineal dentro de la banda; la onda senoidal vive SOLO en X.
@@ -32,15 +33,40 @@
   var STEP_SPACING = 56;      // px verticales aproximados entre huellas
   var CONTAINER_MAX = 1180;   // coincide con --container del CSS
 
-  /* Tramos por sección, intercalando lados. */
-  var SEGS = [
-    { sel: ".intro", side: "L" },
-    { sel: "#categorias", side: "R" },
-    { sel: "#productos", side: "R" },
-    { sel: "#nosotros", side: "L" },
-    { sel: "#contacto", side: "R" }
+  /* Tabla clásica de respaldo (si nadie pasa pagina.json, p. ej. el
+     main.js publicado todavía no lo hace). El orden y los lados reales
+     salen del campo "huella" de cada sección. */
+  var SEGS_FALLBACK = [
+    { huella: "izquierda" },
+    { huella: "derecha" },
+    { huella: "derecha" },
+    { huella: "izquierda" },
+    { huella: "derecha" }
   ];
-  var MOBILE_SEGS = { ".intro": true, "#contacto": true };
+  var PAGINA_ACTUAL = null;
+
+  /* Tramos según el contenido real: una sección visible = un tramo, con el
+     lado que diga "huella" (izquierda/derecha); "ninguna" lo saltea; sin
+     valor se intercala solo para no repetir lado. */
+  function segmentosDesde(pagina) {
+    var secciones = (pagina && pagina.secciones) || null;
+    var fuente = secciones ? secciones.filter(function (s) { return s && !s.oculto; }) : null;
+    var datos = fuente && fuente.length ? fuente : SEGS_FALLBACK;
+
+    var segs = [];
+    var ultimoLado = null;
+    datos.forEach(function (sec) {
+      var huella = sec.huella;
+      var lado = null;
+      if (huella === "izquierda") { lado = "L"; }
+      else if (huella === "derecha") { lado = "R"; }
+      else if (huella === "ninguna") { return; } /* esta sección no lleva */
+      else { lado = ultimoLado === "L" ? "R" : "L"; } /* auto-intercalado */
+      segs.push({ side: lado });
+      ultimoLado = lado;
+    });
+    return segs;
+  }
 
   /* PRNG determinista (mulberry32). */
   function mulberry32(seed) {
@@ -137,11 +163,18 @@
     var prng = mulberry32(SEED);
     var pawCount = 0;
 
-    for (var s = 0; s < SEGS.length; s++) {
-      var seg = SEGS[s];
-      if (isMobile && !MOBILE_SEGS[seg.sel]) { continue; }
+    /* Tramos dinámicos: una sección visible = un tramo. El DOM de <main>
+       saltea las ocultas, así que emparejamos por posición. */
+    var segs = segmentosDesde(PAGINA_ACTUAL);
+    var domSecs = mainEl.querySelectorAll(":scope > section");
+    if (!domSecs.length) { domSecs = document.querySelectorAll("main > section"); }
 
-      var sec = document.querySelector(seg.sel);
+    for (var s = 0; s < segs.length && s < domSecs.length; s++) {
+      var seg = segs[s];
+      /* En móvil solo el primer y el último tramo */
+      if (isMobile && s !== 0 && s !== segs.length - 1) { continue; }
+
+      var sec = domSecs[s];
       if (!sec) { continue; }
 
       var bandTop = sec.offsetTop;   // relativo a <main> (offsetParent)
@@ -223,8 +256,11 @@
   }
 
   /* El contenido se renderiza de forma asíncrona desde data/*.json:
-     main.js vuelve a dibujar las huellas cuando termina el render. */
-  window.renderPawTrails = function () {
+      main.js vuelve a dibujar las huellas cuando termina el render, pasando
+      pagina.json para que los tramos sigan el orden y el campo "huella"
+      reales. Sin argumento, usa la última recibida (o la tabla clásica). */
+  window.renderPawTrails = function (pagina) {
+    if (pagina && pagina.secciones) { PAGINA_ACTUAL = pagina; }
     var mainEl = document.querySelector("main");
     if (mainEl) { renderTrails(mainEl); }
   };

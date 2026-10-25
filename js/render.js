@@ -68,6 +68,18 @@
     return typeof v === "string" && v.trim() !== "";
   }
 
+  /* Enlaces: solo esquemas seguros. Si el dato viniera contaminado con
+     algo como "javascript:…", el enlace queda neutralizado en "#".
+     (Defensa en profundidad: el panel solo deberían usarlo personas de
+     confianza, pero un pegado accidental no debe poder ejecutar código.) */
+  function hrefSeguro(v) {
+    var s = String(v == null ? "" : v).trim();
+    if (s === "") { return "#"; }
+    if (s.charAt(0) === "#" || s.charAt(0) === "/") { return a(s); }
+    if (/^(https?:|mailto:|tel:)/i.test(s)) { return a(s); }
+    return "#";
+  }
+
   /* Texto con marcado mínimo: **destacado** y *cursiva*. Escapa antes. */
   function rich(v) {
     var s = e(v);
@@ -87,7 +99,7 @@
     var neg = sitio.negocio || {};
 
     var links = n.map(function (item) {
-      return '<li><a class="nav-link" href="' + a(item.ancla) + '">' + e(item.texto) + "</a></li>";
+      return '<li><a class="nav-link" href="' + hrefSeguro(item.ancla) + '">' + e(item.texto) + "</a></li>";
     }).join("");
 
     var cta = "";
@@ -125,7 +137,7 @@
     var n = sitio.nav || [];
 
     var secciones = n.map(function (item) {
-      return "<li><a href=\"" + a(item.ancla) + '">' + e(item.texto) + "</a></li>";
+      return "<li><a href=\"" + hrefSeguro(item.ancla) + '">' + e(item.texto) + "</a></li>";
     }).join("");
 
     var contacto = "";
@@ -141,7 +153,7 @@
       var r = redes[key];
       if (!r || !set(r.url)) return "";
       return (
-        '<li><a href="' + a(r.url) + '" target="_blank" rel="noopener" aria-label="' + a(r.etiqueta) + '">' +
+        '<li><a href="' + hrefSeguro(r.url) + '" target="_blank" rel="noopener" aria-label="' + a(r.etiqueta) + '">' +
         (SOCIAL_SVG[key] || "") +
         "</a></li>"
       );
@@ -209,14 +221,14 @@
       '<section class="hero intro" id="' + a(b.id || "inicio") + '" aria-label="' + a(b.aria) + '">' +
       '<div class="container hero-grid">' +
       '<div class="hero-copy">' +
-      '<p class="eyebrow">' + e(b.eyebrow) + "</p>" +
-      '<h1 class="hero-title">' + rich(b.titulo) + "</h1>" +
-      '<p class="hero-lead">' + e(b.texto) + "</p>" +
-      '<div class="hero-actions">' +
+      '<p class="eyebrow" style="--i:0">' + e(b.eyebrow) + "</p>" +
+      '<h1 class="hero-title" style="--i:1" data-type>' + rich(b.titulo) + "</h1>" +
+      '<p class="hero-lead" style="--i:2">' + e(b.texto) + "</p>" +
+      '<div class="hero-actions" style="--i:3">' +
       '<a class="btn btn-whatsapp btn-lg" data-wa-link data-wa-msg="' + wa(b.botonPrincipal && b.botonPrincipal.mensaje, sitio) + '">' +
       SVG_WA_BTN + " " + e(b.botonPrincipal && b.botonPrincipal.texto) +
       "</a>" +
-      '<a class="btn btn-outline btn-lg" href="' + a(b.botonSecundario && b.botonSecundario.enlace) + '">' +
+      '<a class="btn btn-outline btn-lg" href="' + hrefSeguro(b.botonSecundario && b.botonSecundario.enlace) + '">' +
       e(b.botonSecundario && b.botonSecundario.texto) +
       "</a>" +
       "</div></div>" +
@@ -231,9 +243,9 @@
   }
 
   function buildCategorias(b) {
-    var cards = (b.tarjetas || []).map(function (c) {
+    var cards = (b.tarjetas || []).map(function (c, i) {
       return (
-        '<a class="category-card" href="' + a(c.enlace) + '" data-reveal>' +
+        '<a class="category-card" href="' + hrefSeguro(c.enlace) + '" data-reveal style="--reveal-delay:' + (i * 90) + 'ms">' +
         '<img class="category-media" src="' + a(c.imagen) + '" alt="' + a(c.alt) + '"' +
         (c.ancho ? ' width="' + c.ancho + '"' : "") +
         (c.alto ? ' height="' + c.alto + '"' : "") +
@@ -254,12 +266,13 @@
     );
   }
 
-  function buildProductoCard(p, sitio, ctaTexto) {
+  function buildProductoCard(p, sitio, ctaTexto, index) {
     var fotos = p.fotos || [];
     var cta = set(ctaTexto) ? ctaTexto : "Consultar disponibilidad";
     var single = fotos.length < 2;
     var label = single ? "Foto de " : "Fotos de ";
     var hidden = single ? " hidden" : "";
+    var delay = ((index || 0) % 4) * 80;
 
     var imgs = fotos.map(function (f, i) {
       var cls = "pc-slide" + (i === 0 ? " is-active" : "");
@@ -273,7 +286,7 @@
     var precio = set(p.precio) ? '<span class="product-price">' + e(p.precio) + "</span>" : "";
 
     return (
-      '<article class="product-card" data-reveal data-pet="' + a(p.mascotas) + '">' +
+      '<article class="product-card" data-reveal data-pet="' + a(p.mascotas) + '" style="--reveal-delay:' + delay + 'ms">' +
       '<div class="product-carousel" data-carousel aria-roledescription="carrusel" aria-label="' + a(label + p.titulo) + '">' +
       '<div class="pc-viewport">' + imgs + "</div>" +
       '<button class="pc-btn pc-prev" type="button" data-carousel-prev aria-label="Foto anterior"' + hidden + ">" + SVG_PREV + "</button>" +
@@ -301,15 +314,18 @@
         "</div>";
     }
 
-    var cards = (b.productos || []).map(function (p) {
-      return buildProductoCard(p, sitio, b.ctaTexto);
+    var cards = (b.productos || []).map(function (p, i) {
+      return buildProductoCard(p, sitio, b.ctaTexto, i);
     }).join("");
 
+    /* Paginación del catálogo: JS la activa cuando hay más de 6 productos
+       (bloques de 6 por página, respetando el filtro activo). */
     return (
       '<section class="section" id="' + a(b.id || "productos") + '">' +
       '<div class="container">' + sectionHead(b) +
       filtros +
       '<div class="product-grid">' + cards + "</div>" +
+      '<nav class="product-pagination" data-product-pagination hidden aria-label="Páginas del catálogo"></nav>' +
       "</div></section>"
     );
   }
@@ -366,7 +382,7 @@
       var r = redes[key];
       if (!r || !set(r.url)) return "";
       return (
-        "<li><a href=\"" + a(r.url) + '" target="_blank" rel="noopener">' +
+        "<li><a href=\"" + hrefSeguro(r.url) + '" target="_blank" rel="noopener">' +
         (SOCIAL_SVG[key] || "") +
         "<span>" + e(r.etiqueta) + "</span></a></li>"
       );
@@ -455,7 +471,9 @@
     var main = document.querySelector("main");
     if (main) {
       var secciones = (pagina && pagina.secciones) || [];
-      main.innerHTML = secciones.map(function (b) { return buildBlock(b, sitio); }).join("");
+      /* Secciones marcadas como ocultas desde el panel no se muestran */
+      var visibles = secciones.filter(function (b) { return !(b && b.oculto); });
+      main.innerHTML = visibles.map(function (b) { return buildBlock(b, sitio); }).join("");
     }
 
     var footer = document.querySelector(".site-footer");

@@ -55,7 +55,7 @@
   ],
   "navCtaTexto": "WhatsApp",
   "footer": {
-    "descripcion": "Productos para perros y gatos, con atención cercana en el local.",
+    "descripcion": "Productos para perros y gatos en Salta, con atención cercana en el local.",
     "seccionesTitulo": "Secciones",
     "contactoTitulo": "Contacto",
     "seguinosTitulo": "Seguinos",
@@ -66,5 +66,9 @@
     ],
     "whatsappTexto": "WhatsApp",
     "copyright": "La Boutique Cat & Dog. Todos los derechos reservados."
+  },
+  "seo": {
+    "titulo": "La Boutique Cat & Dog | Tienda de mascotas en Salta",
+    "descripcion": "Tienda de mascotas en Salta: alimento, accesorios y productos de cuidado para perros y gatos. Escribinos por WhatsApp y consultá marcas y disponibilidad en el local."
   }
 }
