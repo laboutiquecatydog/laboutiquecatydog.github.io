@@ -113,7 +113,6 @@
       etiqueta: "Identificador (ancla de la sección)",
       pista: "Con cuidado: los enlaces del menú apuntan a esta ancla (ej.: #productos). Cambiarla los rompe."
     },
-    huella: { tipo: "select", etiqueta: "Camino de huellas (lado)", pista: "Dónde serpentea el camino decorativo de huellitas al lado de esta sección. «ninguna» lo saltea.", opciones: ["izquierda", "derecha", "ninguna"] },
     mostrarFiltros: { tipo: "check", etiqueta: "Mostrar los filtros de categoría" },
     srcset: { tipo: "textarea", filas: 2, etiqueta: "srcset (variantes de tamaño)", pista: "Lo completa solo el editor al subir la foto. Solo tocar si sabés lo que hacés." },
     sizes: { tipo: "textarea", filas: 2, etiqueta: "sizes (regla de elección)", pista: "Lo completa solo el editor al subir la foto. Solo tocar si sabés lo que hacés." },
@@ -164,8 +163,10 @@
     url: { etiqueta: "Dirección (URL)" }
   };
 
-  /* Claves técnicas que no se muestran en ningún formulario */
-  var TECNICOS = { tipo: 1, oculto: 1 };
+  /* Claves técnicas que no se muestran en ningún formulario. `huella` quedó
+     en desuso (se retiró el camino decorativo de huellas): si algún
+     borrador viejo la trae, no se muestra. */
+  var TECNICOS = { tipo: 1, oculto: 1, huella: 1 };
 
   /* Configuración del selector de imágenes según el campo y su contexto */
   function configImagen(clave, contexto) {

@@ -23,6 +23,8 @@ Con eso y el link `https://laboutiquecatydog.github.io/admin/editor.html` el cli
 - **Git (línea de comandos): NO** — el panel hace los commits por ella.
 - **GitHub Desktop: NO recomendado** — es TU herramienta de desarrollador. En manos del cliente agrega riesgo (un push accidental fuera del panel puede romper el sitio) y complejidad. El editor visual ES su "git".
 
+> **¿Y los archivos `preview.cmd` y `Abrir panel (local).cmd`?** Son herramientas **del desarrollador** (levantan un servidor local para probar cambios ANTES de publicar). El cliente NO los usa ni los necesita: su panel está en internet, en `https://laboutiquecatydog.github.io/admin/editor.html`. No tiene que levantar ningún "localhost" nunca. Si encontra esos archivos en la copia de respaldo, que los ignore.
+
 > Si algún día otro desarrollador continúa el proyecto, ESE desarrollador instala git/Node — y encuentra todo documentado en el README.
 
 ## 3. ¿Es mejor que ejecute todo en local con git?

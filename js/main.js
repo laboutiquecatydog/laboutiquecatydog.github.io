@@ -831,9 +831,6 @@
           window.renderSite(res[0], res[1]);
         }
         startup();
-        if (typeof window.renderPawTrails === "function") {
-          window.renderPawTrails(res[1]);
-        }
       })
       .catch(showLoadError);
   }
@@ -853,11 +850,6 @@
       try {
         if (typeof window.renderSite === "function") {
           window.renderSite(sitio, pagina);
-        }
-        /* renderSite reemplaza el <main> completo: las huellas se dibujan
-           de nuevo con el orden y los lados reales de esta versión. */
-        if (typeof window.renderPawTrails === "function") {
-          window.renderPawTrails(pagina);
         }
         this.reiniciar();
       } catch (e) {

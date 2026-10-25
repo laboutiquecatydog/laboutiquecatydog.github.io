@@ -187,3 +187,13 @@ Sin overflow horizontal, hero a una columna, menú hamburguesa accesible, pagina
 - Push pendiente del lado del desarrollador (GitHub Desktop con la cuenta del cliente; el shell local tiene logueada la cuenta equivocada `nicolabarranco27-a11y`).
 
 **Verificación E2E (0 errores):** scroll determinista con `scroll-behavior: auto` inyectado (tocar foto: 2937→2937 exacto; re-render: 2937→2937), triple-click navega al panel, subida visible al instante en la vista (src=data:), huellas presentes desktop/móvil, móvil sin overflow.
+
+---
+
+## 2026-10-24 · Retiro de las huellas + guía de entrega ampliada
+
+Decisión del desarrollador tras verlo en vivo: **las huellas decorativas se quitan de la página** ("queda mejor sin eso").
+
+- Remoción limpia, sin dejar huérfanos: `js/paw-trail.js` eliminado del repo (queda en el historial de git por si algún día vuelve), script tag fuera de `index.html`, llamadas a `renderPawTrails` fuera de `main.js` (boot y `BQPreview.renderizar`), bloque CSS `.paw-trails` fuera de `styles.css`.
+- Campo **`huella` retirado de punta a punta**: eliminado de las 5 secciones de `data/pagina.json` y de las plantillas del editor; fuera de las `REGLAS` del formulario y agregado a `TECNICOS` (si un borrador viejo lo trae, no se muestra).
+- Documentación sincronizada: README (sección del componente eliminada, estructura, funcionalidades), guía de presentación (fuera la mención de "huellitas") y **guía de entrega ampliada**: aclaración explícita de que `preview.cmd` y `Abrir panel (local).cmd` son herramientas del DESARROLLADOR — el cliente nunca levanta localhost, su panel vive en internet.

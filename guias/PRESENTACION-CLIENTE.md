@@ -61,7 +61,7 @@ Usá estas frases — son las que justifican el trabajo:
 |---|---|
 | "**La página es tuya**: no depende de mí ni de ninguna plataforma con mensualidad" | Wix/Shopify cobran todos los meses; acá el hosting es gratis para siempre (GitHub Pages) |
 | "**Vos editás todo sola**, sin esperarme ni pagar por cambios" | Cada cambio que un dev le cobraría, ella lo hace en 30 segundos |
-| "**Está hecha a medida** para tu marca: diseño, tipografías, colores, las huellitas de mascotas" | No es una plantilla genérica que se ve igual que mil pet shops |
+| "**Está hecha a medida** para tu marca: diseño, tipografías, colores, tu identidad" | No es una plantilla genérica que se ve igual que mil pet shops |
 | "**Rápida y segura**: auditamos la seguridad con pruebas reales, y carga en un segundo" | Es profesional de verdad: SEO técnico, accesibilidad, rendimiento |
 | "**Imposible perder contenido**: deshacer, copias, versiones e historial completo" | Su negocio no queda rehén de la memoria de nadie |
 | "**Lista para crecer**: si mañana querés tu dominio propio (`laboutiquecatydog.com.ar`), se conecta en un día" | Escalable sin rehacer nada |

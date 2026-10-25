@@ -18,14 +18,12 @@ data/sitio.json   ─┐
 data/pagina.json  ─┘        │
                             ▼
                     js/main.js  ─►  interacciones (menú, carruseles, WhatsApp…)
-                            │
-                    js/paw-trail.js  ─►  caminos decorativos de huellas
 ```
 
 1. `index.html` es solo un **esqueleto**: contiene el `<head>` (SEO, fuentes, JSON-LD) y contenedores vacíos para el header, `<main>`, el footer y el botón flotante de WhatsApp.
 2. `js/main.js` carga los dos JSON con `fetch()`.
 3. `js/render.js` construye el HTML de la página a partir de esos datos.
-4. Luego se inicializan las interacciones y se dibujan las huellas.
+4. Luego se inicializan las interacciones.
 
 **Consecuencia importante:** al cargar datos por `fetch()`, el sitio **no funciona abriendo `index.html` con doble clic** (`file://`): hay que servirlo por HTTP (ver [Abrir el sitio en local](#abrir-el-sitio-en-local)).
 
@@ -45,7 +43,7 @@ Una sola página con navegación por anclas. Los bloques y su orden se definen e
 | Header | `.site-header` | Logo, menú, botón de WhatsApp |
 | Footer | `.site-footer` | Marca, secciones, datos de contacto, redes y año dinámico |
 
-**Funcionalidades:** menú móvil con overlay y scroll-spy, carruseles con teclado/touch/autoplay (pausa al enfocar o pasar el mouse), animaciones de aparición al hacer scroll, barra de progreso de scroll, título de portada con efecto de escritura **y revelado del resto del contenido en paralelo** (todo visible en ~0,5 s, título completo en ~1,6 s), enlaces de WhatsApp/Google Maps generados desde los datos, filtros de productos por mascota con repaginación, secciones ocultables desde el panel (`oculto`), SEO dinámico desde `sitio.json` (título, descripción, Open Graph y JSON-LD `PetStore`), **caminos decorativos de huellas** de perro y gato entre las secciones, y **acceso discreto al panel: tres clics seguidos en el logo** (el login con GitHub sigue siendo obligatorio; desactivado dentro de la vista previa del editor).
+**Funcionalidades:** menú móvil con overlay y scroll-spy, carruseles con teclado/touch/autoplay (pausa al enfocar o pasar el mouse), animaciones de aparición al hacer scroll, barra de progreso de scroll, título de portada con efecto de escritura **y revelado del resto del contenido en paralelo** (todo visible en ~0,5 s, título completo en ~1,6 s), enlaces de WhatsApp/Google Maps generados desde los datos, filtros de productos por mascota con repaginación, secciones ocultables desde el panel (`oculto`), SEO dinámico desde `sitio.json` (título, descripción, Open Graph y JSON-LD `PetStore`), y **acceso discreto al panel: tres clics seguidos en el logo** (el login con GitHub sigue siendo obligatorio; desactivado dentro de la vista previa del editor).
 
 ---
 
@@ -67,7 +65,6 @@ la-boutique-cat-y-dog/
 ├── js/
 │   ├── render.js               # Motor de render: data/*.json  →  HTML
 │   ├── main.js                 # Datos, interacciones, paginación, SEO dinámico y BQPreview
-│   ├── paw-trail.js            # Caminos de huellas (siguen el orden y campo "huella")
 │   └── config.js               # ⚠️ SIN USO (se conserva como referencia histórica)
 ├── data/
 │   ├── sitio.json              # Datos globales + bloque "seo" editable
@@ -167,7 +164,6 @@ Es una lista `secciones`. **El orden de la lista es el orden en la web.** Cada s
 - **`slides[].ancho` / `alto`**, **`tarjetas[].ancho` / `alto`**, **`imagenAncho` / `imagenAlto`**: opcionales. Ayudan a reservar el espacio de la imagen y evitar saltos de layout. El CSS fija la geometría con `aspect-ratio` + `object-fit`, así que **ocultarlos o dejarlos vacíos no deforma las imágenes**.
 - **`slides[].srcset` / `sizes`**: opcionales, para servir la variante `-900` en pantallas chicas. En el panel figuran como campos ocultos.
 - **`slides[].prioridad`**: reservado para marcar la primera foto como carga prioritaria.
-- **`huella`** (en cada sección): `izquierda`, `derecha` o `ninguna`. Reservado para los caminos de huellas decorativos (ver [Pendientes](#pendientes--todo) — el paw-trail todavía usa posiciones fijas por ancla).
 
 **Regla general:** cualquier campo de texto vacío (`""`) **no se muestra**; los botones y tarjetas asociados se ocultan automáticamente para no enlazar a destinos vacíos. Las imágenes se guardan en `assets/img/`.
 
@@ -191,7 +187,7 @@ Es una lista `secciones`. **El orden de la lista es el orden en la web.** Cada s
 | Volver atrás | **Deshacer/rehacer** tipo Word: flechas ↶ ↷ en la barra superior, `Ctrl+Z` / `Ctrl+Y` (también con el foco en la vista previa). Historial de hasta 60 pasos |
 | Recuperar algo ya publicado | **Historial de versiones** (ícono de reloj): lista las últimas versiones publicadas de cada archivo con fecha y mensaje; «Restaurar» carga la versión **como borrador** para revisarla en la vista previa — nada se publica solo y la restauración es deshacible |
 | Copias de seguridad | Ícono de copias: copias locales del contenido en el navegador (hasta 15). Se guarda una **automática antes de cada publicación**; también manuales, **descargables a un archivo** y se pueden **subir desde archivo**. Restaurar carga como borrador |
-| Campos avanzados | Todo lo que antes hacía el panel antiguo, integrado: `id`/anclas (con advertencia), `srcset`/`sizes`/medidas/prioridad en cajas plegables, `huella` del camino decorativo (con opción «ninguna») |
+| Campos avanzados | Todo lo que antes hacía el panel antiguo, integrado: `id`/anclas (con advertencia), `srcset`/`sizes`/medidas/prioridad en cajas plegables |
 | SEO | En «Datos del local», bloque **SEO** con título y descripción (con pistas de longitud). JSON-LD con URLs absolutas, horarios leídos de los datos, `url`, `logo`, `priceRange` |
 | Publicar | Botón «Publicar cambios» → 1 commit por archivo que haya cambiado (portada y/o datos del local). En ~1 min está en la web |
 | Ayuda integrada | Botón **«?»** en la barra superior: guía corta y clara de todo el panel (textos, fotos, productos, publicar, deshacer, sesión) |
@@ -292,64 +288,12 @@ Auditoría completa (24/10/2026) con pruebas automáticas de vulnerabilidades �
 
 ---
 
-## Componente: caminos de huellas (`js/paw-trail.js`)
-
-Es el detalle visual característico del sitio: tramos de huellas serpenteantes que enlazan las secciones, como si un perro y un gato hubieran pasado por el margen de la página.
-
-### Qué hace
-- Dibuja **un único `<svg class="paw-trails">`** como último hijo de `<main>`, cubriendo todo el alto de la página.
-- Genera **un tramo por sección VISIBLE**, siguiendo **el orden real de `data/pagina.json`** y el campo **`huella`** de cada sección (editable en el panel):
-  - `huella: "izquierda"` o `"derecha"` → el camino va de ese lado.
-  - `huella: "ninguna"` → esa sección no lleva camino.
-  - Sin valor → se intercala solo para no repetir lado dos veces seguidas.
-- Así, si el cliente reordena, agrega, oculta o duplica secciones desde el panel, el camino acompaña. (Antes usaba una tabla fija por ancla y quedaba desalineado al reordenar).
-- En **móvil** (`<641px`) solo quedan el **primer y el último tramo** (lados opuestos), para no invadir el contenido.
-
-### Reglas de dibujo
-- **Sin `viewBox`**: el SVG usa píxeles reales 1:1 con `<main>`, evitando distorsión o escalado inesperado.
-- La **Y es estrictamente lineal** dentro de la banda de su sección (`offsetTop` / `offsetHeight`); la **onda vive solo en X** (`sin`), así el tramo sigue el flujo vertical de la página.
-- La **canaleta** (margen entre la ventana y el contenedor) se adapta al ancho de pantalla: en pantallas anchas el serpenteo usa amplitud completa; en angostas la senda se cierra contra el borde sin invadir texto ni fotos.
-- **Orientación**: las huellas siempre apuntan con los **dedos hacia arriba**, con una inclinación suave que sigue la onda (acotada a ±22°) más un jitter de pisada ±12°.
-- **Tamaño y opacidad** varían con una semilla fija (`0xC0FFEE`) mediante un PRNG determinista (`mulberry32`), así el patrón es natural pero **idéntico en cada carga** (reproducible y testeable). El fade de los extremos es **solo en opacidad**; el tamaño nunca se encoge.
-
-### Las huellas
-Dos formas en `<defs>`, reutilizadas con `<use>` (ligeras, sin imágenes ni emojis):
-
-| Huella | Almohadilla | Distinguible por |
-|---|---|---|
-| **Perro** (`#pt-d`) | ancha, **dos lóbulos arriba con muesca central** | almohadilla más ancha y redondeada |
-| **Gato** (`#pt-c`) | **triangular**, punta hacia arriba, base ligeramente trilobulada | más chica y angosta, punta arriba |
-
-Ambas son 4 dedos en arco + almohadilla, en tinta plana azul `#315A9E`, escaladas para que se lean a ~15–20 px. Se alternan en toda la página (`perro → gato → perro → …`).
-
-### Constantes a ajustar
-Están al principio del archivo:
-
-| Constante | Valor | Qué controla |
-|---|---|---|
-| `SEED` | `0xC0FFEE` | Semilla del PRNG (patrón reproducible) |
-| `WAVES` | `2.2` | Ondas por tramo |
-| `AMPLITUDE_MAX` | `55` | Amplitud máxima del serpenteo (px) |
-| `STEP_OFFSET_MAX` | `14` | Zigzag de pisada por paso (px) |
-| `STEP_JITTER` | `8` | Ruido por huella (±4 px) |
-| `STEP_SPACING` | `56` | Separación vertical aproximada (px) |
-| `CONTAINER_MAX` | `1180` | Ancho del contenedor (coincide con CSS) |
-
-### Accesibilidad y rendimiento
-- Decoration pura: `aria-hidden="true"`, `focusable="false"` y `pointer-events: none`.
-- **Sin dependencias, sin `requestAnimationFrame` ni animaciones**: se dibuja una vez y en `resize` (con *debounce* de 250 ms).
-- **Degradable**: si algo falla, el `try/catch` lo deja pasar y la página funciona igual.
-
----
-
 ## Detalles técnicos
 
 - **Sin frameworks ni dependencias** (solo Google Fonts por CDN): sin `node_modules`, sin build, sin sorpresas al desplegar.
 - **JavaScript ES5 estricto** (`var`, funciones, sin flechas ni *template literals*) dentro de IIFEs con `"use strict"`.
 - **Escapado de seguridad** en `js/render.js`: los textos se escapan (`&`, `<`, `>`; comillas en atributos). El cliente **nunca** inyecta HTML crudo; solo `**negrita**` y `*cursiva*` generan marcado, y únicamente en el título del hero.
 - **Render por strings**: `js/render.js` concatena HTML en lugar de usar plantillas, para no añadir dependencias.
-- **Sin `viewBox` ni `preserveAspectRatio`** en el SVG de las huellas.
-- **Sin z-index negativos** ni `main > *`: las huellas viven en `z-index: 0` dentro de `<main>` (`position: relative`).
 - **`js/config.js` ya no se usa**: los datos se migraron a `data/*.json`. El archivo se conserva como referencia.
 
 ---
@@ -372,8 +316,8 @@ Sitio publicado en GitHub Pages con el contenido en JSON. **El rediseño de la l
 | **W4b — deshacer y conflictos** | Deshacer/rehacer (historial de instantáneas, `Ctrl+Z`/`Ctrl+Y` + botones), chip que refleja la diferencia real con lo publicado, chequeo de conflictos pre-publicación (SHA en GitHub vs. local) con opciones claras | Local |
 | **W4c — seguridad total** | Flechas tipo Word (íconos ↶ ↷), atajos activos también dentro de la vista previa, e **Historial de versiones**: restaurar versiones publicadas desde el historial de commits (carga como borrador, deshacible) | Local |
 | **W5a — SEO/GEO técnico** | `robots.txt` + `sitemap.xml`, bloque **`seo`** editable desde el panel (título/descripción con pistas), JSON-LD con URLs absolutas + `url`/`logo`/`priceRange`/`@id` + **horarios leídos de los datos**, `og-image.jpg` 1200×630, textos con intención local (Salta) | Local |
-| **W5b — editor único** | **Sveltia retirado**: todo integrado en el editor visual (campos avanzados plegables, `id` editable con advertencia, `huella` con «ninguna»); `/admin/` redirige al editor; `config.yml` eliminado | Local |
-| **W5c — copias + robustez** | **Copias de seguridad** en el navegador (auto antes de publicar, manuales, descargar/subir archivo, restaurar como borrador); la vista previa refleja reordenar/ocultar/agregar en vivo; paw-trail dinámico; `.gitignore` con `graphify-out/` | Local |
+| **W5b — editor único** | **Sveltia retirado**: todo integrado en el editor visual (campos avanzados plegables, `id` editable con advertencia); `/admin/` redirige al editor; `config.yml` eliminado | Local |
+| **W5c — copias + robustez** | **Copias de seguridad** en el navegador (auto antes de publicar, manuales, descargar/subir archivo, restaurar como borrador); la vista previa refleja reordenar/ocultar/agregar en vivo; `.gitignore` con `graphify-out/` | Local |
 | **W5d — cierre** | Push general a producción, smoke test, guías de Search Console + Google Business Profile, guía del cliente | Pendiente |
 
 ---

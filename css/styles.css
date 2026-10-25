@@ -903,27 +903,6 @@ button { font-family: inherit; }
 .whatsapp-fab:active { transform: scale(0.98); }
 .whatsapp-fab svg { width: 30px; height: 30px; }
 
-/* -------------------- Camino decorativo de huellas ---------------------- */
-/* Generado por js/paw-trail.js: UN camino continuo de huellas que recorre
-   <main> por la canaleta izquierda. <main> es el bloque de posicionamiento
-   del SVG; sin isolation ni z-index para no crear contexto de apilamiento
-   propio. La capa z-index 0 se pinta por encima de los fondos de seccion
-   (blanco/gris) y por debajo del header (z-index 1000) y del boton
-   flotante. pointer-events: none + aria-hidden (en el markup) -> nunca
-   intercepta clics ni lectores de pantalla. Degradable: si el JS falla,
-   la pagina se ve completa sin el camino. */
-main { position: relative; }
-
-.paw-trails {
-  position: absolute;
-  top: 0;
-  left: 0;
-  display: block;
-  overflow: visible;
-  pointer-events: none;
-  z-index: 0;
-}
-
 /* -------------------------- Reveal animation ---------------------------- */
 /* ApariciÃ³n al entrar en pantalla: fundido + desplazamiento vertical muy
    corto. Los grupos de tarjetas reciben un retraso escalonado mediante

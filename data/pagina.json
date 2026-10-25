@@ -2,14 +2,19 @@
   "secciones": [
     {
       "tipo": "hero",
-      "huella": "izquierda",
       "id": "inicio",
       "aria": "Bienvenida",
       "eyebrow": "Boutique para mascotas",
       "titulo": "Todo para **perros** y **gatos**, en un solo lugar",
       "texto": "Alimento, accesorios y productos de cuidado para acompañarlos todos los días. Una selección pensada para el bienestar de tu mascota, con atención cercana en nuestro local de Salta.",
-      "botonPrincipal": { "texto": "Consultar por WhatsApp", "mensaje": "Hola, quisiera consultar por sus productos para mascotas" },
-      "botonSecundario": { "texto": "Ver categorías", "enlace": "#categorias" },
+      "botonPrincipal": {
+        "texto": "Consultar por WhatsApp",
+        "mensaje": "Hola, quisiera consultar por sus productos para mascotas"
+      },
+      "botonSecundario": {
+        "texto": "Ver categorías",
+        "enlace": "#categorias"
+      },
       "carruselAria": "Fotografías de La Boutique Cat & Dog",
       "slides": [
         {
@@ -43,7 +48,6 @@
     },
     {
       "tipo": "categorias",
-      "huella": "derecha",
       "id": "categorias",
       "eyebrow": "Categorías",
       "titulo": "¿Para quién estás buscando?",
@@ -72,14 +76,12 @@
     },
     {
       "tipo": "productos",
-      "huella": "derecha",
       "id": "productos",
       "eyebrow": "Productos destacados",
       "titulo": "Un vistazo a nuestra selección",
       "intro": "Algunos de los productos que encontrás en el local. Escribinos por WhatsApp y te contamos qué hay disponible.",
       "mostrarFiltros": true,
       "ctaTexto": "Consultar disponibilidad",
-      "mostrarFiltros": true,
       "productos": [
         {
           "etiqueta": "Perros y gatos",
@@ -175,7 +177,6 @@
     },
     {
       "tipo": "imagenTexto",
-      "huella": "izquierda",
       "id": "nosotros",
       "eyebrow": "Nuestro local",
       "titulo": "Una tienda pensada para ellos",
@@ -196,12 +197,14 @@
     },
     {
       "tipo": "contacto",
-      "huella": "derecha",
       "id": "contacto",
       "eyebrow": "Contacto",
       "titulo": "¿Buscás algo en particular?",
       "intro": "Escribinos y te ayudamos a encontrarlo. También podés visitarnos en el local, en el barrio Periodista de Salta.",
-      "botonWhatsapp": { "texto": "Escribinos por WhatsApp", "mensaje": "Hola, quisiera consultar por sus productos para mascotas" },
+      "botonWhatsapp": {
+        "texto": "Escribinos por WhatsApp",
+        "mensaje": "Hola, quisiera consultar por sus productos para mascotas"
+      },
       "botonMapsTexto": "Cómo llegar",
       "ordenSocial": [
         "instagram",

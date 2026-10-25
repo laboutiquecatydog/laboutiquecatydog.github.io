@@ -70,7 +70,7 @@
      español, sin datos inventados más allá de lo que ya usa el sitio. */
   var PLANTILLAS = {
     hero: {
-      tipo: "hero", huella: "izquierda", id: "portada-nueva", aria: "Portada",
+      tipo: "hero", id: "portada-nueva", aria: "Portada",
       eyebrow: "Nueva sección", titulo: "Título de la portada",
       texto: "Texto breve que explique qué ofrecen.",
       botonPrincipal: { texto: "Consultar por WhatsApp", mensaje: "" },
@@ -78,25 +78,25 @@
       carruselAria: "Fotografías del local", slides: []
     },
     categorias: {
-      tipo: "categorias", huella: "derecha", id: "categorias-nueva",
+      tipo: "categorias", id: "categorias-nueva",
       eyebrow: "Categorías", titulo: "¿Para quién estás buscando?",
       intro: "", ctaTexto: "Ver productos", tarjetas: []
     },
     productos: {
-      tipo: "productos", huella: "derecha", id: "productos-nueva",
+      tipo: "productos", id: "productos-nueva",
       eyebrow: "Productos", titulo: "Nuestra selección",
       intro: "", mostrarFiltros: true, ctaTexto: "Consultar disponibilidad",
       productos: []
     },
     imagenTexto: {
-      tipo: "imagenTexto", huella: "izquierda", id: "nosotros-nueva",
+      tipo: "imagenTexto", id: "nosotros-nueva",
       eyebrow: "Nuestro local", titulo: "Una tienda pensada para ellos",
       texto: "", vinetas: [],
       imagen: "assets/img/local.jpg", imagenAlt: "",
       boton: { texto: "Hacé tu consulta", mensaje: "" }
     },
     contacto: {
-      tipo: "contacto", huella: "izquierda", id: "contacto-nueva",
+      tipo: "contacto", id: "contacto-nueva",
       eyebrow: "Contacto", titulo: "¿Buscás algo en particular?",
       intro: "",
       botonWhatsapp: { texto: "Escribinos por WhatsApp", mensaje: "" },
