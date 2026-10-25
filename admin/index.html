@@ -1,12 +1,23 @@
 <!DOCTYPE html>
 <html lang="es">
-  <head>
-    <meta charset="utf-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1" />
-    <meta name="robots" content="noindex, nofollow" />
-    <title>Panel · La Boutique Cat &amp; Dog</title>
-  </head>
-  <body>
-    <script src="https://unpkg.com/@sveltia/cms/dist/sveltia-cms.js"></script>
-  </body>
+<head>
+  <meta charset="UTF-8" />
+  <title>Redirigiendo al panel… · La Boutique Cat & Dog</title>
+  <meta name="robots" content="noindex, nofollow" />
+  <meta http-equiv="refresh" content="0; url=editor.html" />
+  <link rel="icon" type="image/svg+xml" href="../assets/img/favicon.svg" />
+  <style>
+    body { font-family: system-ui, sans-serif; background: #faf8f5; color: #1c1c1c;
+           display: flex; min-height: 100vh; align-items: center; justify-content: center; margin: 0; }
+    .caja { text-align: center; padding: 2rem; }
+    a { color: #c0272d; }
+  </style>
+</head>
+<body>
+  <div class="caja">
+    <p>El panel ahora es el <strong>editor visual</strong>.</p>
+    <p><a href="editor.html">Entrar al editor</a> (te llevamos solo…)</p>
+  </div>
+  <script>location.replace("editor.html");</script>
+</body>
 </html>

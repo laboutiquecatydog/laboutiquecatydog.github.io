@@ -1,0 +1,236 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
+  <meta name="robots" content="noindex, nofollow" />
+  <title>Panel de administración · La Boutique Cat & Dog</title>
+
+  <!-- Content Security Policy del panel: solo scripts propios + la API de
+       GitHub (datos y galería). Todo lo demás, bloqueado. -->
+  <meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' 'sha256-/x7W7R75k8Roq0WaVRQX9blP4OufE5xbAdzklGxsgpw='; style-src 'self' 'unsafe-inline' fonts.googleapis.com; font-src 'self' fonts.gstatic.com; img-src 'self' data: blob:; connect-src 'self' https://api.github.com; frame-src 'self'; child-src 'self'; base-uri 'self'; object-src 'none'" />
+  <link rel="icon" type="image/svg+xml" href="../assets/img/favicon.svg" />
+
+  <!-- Tipografía Inter (misma del sitio público) -->
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet" />
+
+  <link rel="stylesheet" href="editor.css" />
+  <script>document.documentElement.classList.add('js');</script>
+</head>
+<body>
+  <div id="app">
+
+    <!-- ============ VISTA: LOGIN ============ -->
+    <section id="vista-auth" class="vista vista-auth" hidden>
+      <div class="auth-tarjeta">
+        <img class="auth-logo" src="../assets/img/logo.png" alt="Logotipo de La Boutique Cat &amp; Dog" />
+        <h1>Panel de administración</h1>
+        <p class="auth-sub">Editá las secciones y el contenido de la web, y publicá los cambios con tu cuenta de GitHub.</p>
+
+        <button id="boton-login" class="btn-rojo btn-grande" type="button">
+          <svg viewBox="0 0 24 24" aria-hidden="true"><path fill="currentColor" d="M12 2.25a9.75 9.75 0 0 0-3.085 19.01c.487.09.665-.21.665-.468v-1.64c-2.71.588-3.284-1.306-3.284-1.306-.443-1.127-1.082-1.427-1.082-1.427-.885-.605.067-.593.067-.593.978.07 1.493 1.004 1.493 1.004.87 1.492 2.283 1.061 2.84.812.088-.631.34-1.062.618-1.306-2.162-.246-4.434-1.082-4.434-4.815 0-1.062.38-1.931 1.004-2.611-.1-.246-.436-1.235.096-2.575 0 0 .817-.262 2.676 1a9.3 9.3 0 0 1 4.88 0c1.858-1.262 2.674-1 2.674-1 .533 1.34.198 2.33.098 2.575.624.68 1.003 1.549 1.003 2.611 0 3.742-2.276 4.567-4.443 4.808.349.301.66.894.66 1.802v2.67c0 .26.177.55.67.467A9.75 9.75 0 0 0 12 2.25z"/></svg>
+          Iniciar sesión con GitHub
+        </button>
+
+        <p class="auth-sep"><span>o</span></p>
+
+        <details class="auth-token">
+          <summary>Iniciar sesión con un token de acceso (avanzado)</summary>
+          <p class="auth-token-hint">Si el login con GitHub falla, podés pegar un token personal: GitHub → Settings → Developer settings → Personal access tokens <strong>(classic)</strong> → Generate new token, con permiso <code>repo</code>.</p>
+          <div class="token-fila">
+            <input id="campo-token" type="password" inputmode="text" autocomplete="off" placeholder="ghp_…" aria-label="Token de acceso de GitHub" />
+            <button id="boton-token" class="btn-borde" type="button">Entrar</button>
+          </div>
+        </details>
+
+        <p class="auth-error" id="auth-error" role="alert" hidden></p>
+        <p class="auth-nav"><a href="/" >← Volver a la web</a></p>
+      </div>
+    </section>
+
+    <!-- ============ VISTA: CARGA ============ -->
+    <section id="vista-carga" class="vista vista-carga" hidden>
+      <div class="carga-anillo" aria-hidden="true"></div>
+      <p id="carga-texto">Cargando el contenido…</p>
+      <button id="boton-carga-reintentar" class="btn-borde" type="button" hidden>Reintentar</button>
+    </section>
+
+    <!-- ============ VISTA: EDITOR ============ -->
+    <section id="vista-editor" class="vista vista-editor" hidden>
+
+      <!-- Barra superior -->
+      <header class="topbar">
+        <div class="topbar-marca">
+          <img src="../assets/img/logo.png" alt="" aria-hidden="true" />
+          <div class="topbar-nombre">
+            <strong>Panel visual</strong>
+            <span>La Boutique Cat &amp; Dog</span>
+          </div>
+          <span id="chip-cambios" class="chip-cambios" hidden>Cambios sin publicar</span>
+        </div>
+
+        <div class="topbar-acciones">
+          <span id="estado-cuenta" class="estado-cuenta" hidden></span>
+          <button id="boton-deshacer" class="btn-ty btn-top-ico" type="button" title="Deshacer (Ctrl+Z)" aria-label="Deshacer" disabled>
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M9 14L4 9l5-5"/><path d="M4 9h10.5a5.5 5.5 0 0 1 0 11H11"/></svg>
+          </button>
+          <button id="boton-rehacer" class="btn-ty btn-top-ico" type="button" title="Rehacer (Ctrl+Y)" aria-label="Rehacer" disabled>
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M15 14l5-5-5-5"/><path d="M20 9H9.5a5.5 5.5 0 0 0 0 11H13"/></svg>
+          </button>
+          <button id="boton-versiones" class="btn-ty btn-top-ico" type="button" title="Historial de versiones (restaurar algo ya publicado)" aria-label="Historial de versiones">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3 3v5h5"/><path d="M3.05 13a9 9 0 1 0 .5-5.4L3 8"/><path d="M12 7v5l4 2"/></svg>
+          </button>
+          <button id="boton-copias" class="btn-ty btn-top-ico" type="button" title="Copias de seguridad del contenido" aria-label="Copias de seguridad">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="9" y="9" width="11" height="11" rx="2"/><path d="M5 15V6a2 2 0 0 1 2-2h9"/></svg>
+          </button>
+          <button id="boton-publicar" class="btn-rojo" type="button" disabled>Publicar cambios</button>
+          <button id="boton-descartar" class="btn-borde" type="button" disabled>Descartar</button>
+          <button id="boton-salir" class="btn-ty" type="button" aria-label="Cerrar sesión">Salir</button>
+        </div>
+      </header>
+
+      <!-- Pestañas -->
+      <nav class="pestanas" aria-label="Secciones del panel">
+        <button class="pestana is-activa" type="button" data-pestana="secciones">Secciones de la portada</button>
+        <button class="pestana" type="button" data-pestana="sitio">Datos del local</button>
+      </nav>
+
+      <!-- Cuerpo: lista de secciones + vista previa -->
+      <div class="cuerpo">
+        <aside class="panel-lista" aria-label="Lista de secciones">
+          <div class="lista-toolbar">
+            <button id="boton-agregar" class="btn-borde btn-bloque" type="button">
+              <svg viewBox="0 0 24 24" aria-hidden="true"><path fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" d="M12 5v14M5 12h14"/></svg>
+              Agregar sección
+            </button>
+            <p class="lista-ayuda">Arrastrá las secciones para cambiar el orden. En celular usá ↑ y ↓.</p>
+          </div>
+          <ul id="lista-secciones" class="lista-secciones"></ul>
+        </aside>
+
+        <div class="panel-vista">
+          <div class="vista-barra">
+            <div class="vista-modos" role="tablist" aria-label="Modos del panel">
+              <button id="modo-vista" class="modo-btn is-activo" type="button">Vista previa</button>
+              <button id="modo-texto" class="modo-btn" type="button">Textos</button>
+            </div>
+            <button id="boton-recargar-vista" class="btn-borde btn-chico" type="button">Refrescar</button>
+          </div>
+          <div class="vista-marco">
+            <iframe id="marco-vista" title="Vista previa del sitio publicado" loading="lazy"></iframe>
+            <div id="vista-aviso" class="vista-aviso" hidden>
+              <p><strong>La vista previa muestra la versión publicada.</strong></p>
+              <p>Después de publicar los cambios, GitHub Pages los aplica en <strong>~1 minuto</strong>. Usá «Refrescar» para ver si ya están.</p>
+            </div>
+          </div>
+          <div id="form-seccion" class="editor-form" hidden>
+            <p class="form-vacio">Elegí una sección de la lista para editar sus textos.</p>
+          </div>
+        </div>
+      </div>
+
+      <!-- Pestaña: datos del local (sitio.json) -->
+      <section id="panel-datos" class="panel-datos" hidden>
+        <div class="datos-toolbar">
+          <h2>Datos del local</h2>
+          <p class="lista-ayuda">WhatsApp, dirección, horarios, redes, menú y textos del pie. Los cambios se publican con el botón «Publicar cambios» de arriba.</p>
+        </div>
+        <div id="form-datos" class="editor-form editor-form-datos"></div>
+      </section>
+    </section>
+  </div>
+
+  <!-- ============ MODAL: AGREGAR SECCIÓN ============ -->
+  <div id="modal-agregar" class="modal" hidden role="dialog" aria-modal="true" aria-labelledby="modal-agregar-titulo">
+    <div class="modal-caja">
+      <div class="modal-cabecera">
+        <h2 id="modal-agregar-titulo">Agregar una sección nueva</h2>
+        <button class="modal-cerrar boton-x" type="button" aria-label="Cerrar">&times;</button>
+      </div>
+      <p class="modal-texto">Elegí el tipo de sección. Se agrega al final; después podés moverla, ocultarla o borrarla. Los textos e imágenes se editan en la próxima etapa.</p>
+      <div id="plantillas" class="plantillas"></div>
+    </div>
+  </div>
+
+  <!-- ============ MODAL: ELEGIR IMAGEN (W3) ============ -->
+  <div id="modal-imagenes" class="modal" hidden role="dialog" aria-modal="true" aria-labelledby="modal-imagenes-titulo">
+    <div class="modal-caja">
+      <div class="modal-cabecera">
+        <h2 id="modal-imagenes-titulo">Elegir imagen</h2>
+        <button class="boton-x" type="button" aria-label="Cerrar">&times;</button>
+      </div>
+      <div class="media-tabs" role="tablist" aria-label="Origen de la imagen">
+        <button id="media-tab-galeria" class="modo-btn is-activo" type="button">Galería del sitio</button>
+        <button id="media-tab-subir" class="modo-btn" type="button">Subir desde la PC</button>
+      </div>
+      <div id="media-galeria" class="media-galeria">
+        <p class="form-vacio">Cargando la galería…</p>
+      </div>
+      <div id="media-subir" class="media-subir" hidden>
+        <label class="media-drop" for="media-archivo">Elegí un archivo de tu PC (JPG o PNG)</label>
+        <input id="media-archivo" type="file" accept="image/jpeg,image/png,image/webp" hidden />
+        <div id="media-prevista" class="media-prevista" hidden>
+          <img id="media-prevista-img" alt="Vista previa de la imagen elegida" />
+          <p id="media-prevista-info" class="campo-pista"></p>
+          <button id="media-subir-btn" class="btn-rojo btn-bloque" type="button">Subir y usar</button>
+          <p class="campo-pista">La imagen se agrega al repositorio en el momento (un commit). Para verla en la web pública, esperá ~1 minuto y usá «Refrescar».</p>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ============ MODAL: COPIAS DE SEGURIDAD ============ -->
+  <div id="modal-copias" class="modal" hidden role="dialog" aria-modal="true" aria-labelledby="modal-copias-titulo">
+    <div class="modal-caja">
+      <div class="modal-cabecera">
+        <h2 id="modal-copias-titulo">Copias de seguridad</h2>
+        <button class="boton-x" type="button" aria-label="Cerrar">&times;</button>
+      </div>
+      <p class="modal-texto">Copias locales del contenido (portada y datos del local), guardadas en este navegador. Antes de cada publicación se guarda una automáticamente. Restaurar carga la copia <strong>como borrador</strong> — igual que las versiones, no publica nada solo y se puede deshacer.</p>
+      <div class="copias-acciones">
+        <button id="copias-guardar" class="btn-borde" type="button">Guardar copia ahora</button>
+        <label class="btn-borde copias-importar" for="copias-archivo">Subir copia desde archivo</label>
+        <input id="copias-archivo" type="file" accept="application/json,.json" hidden />
+      </div>
+      <div id="copias-lista" class="versiones-lista">
+        <p class="form-vacio">Todavía no hay copias guardadas.</p>
+      </div>
+    </div>
+  </div>
+
+  <!-- ============ MODAL: HISTORIAL DE VERSIONES ============ -->
+  <div id="modal-versiones" class="modal" hidden role="dialog" aria-modal="true" aria-labelledby="modal-versiones-titulo">
+    <div class="modal-caja">
+      <div class="modal-cabecera">
+        <h2 id="modal-versiones-titulo">Historial de versiones</h2>
+        <button class="boton-x" type="button" aria-label="Cerrar">&times;</button>
+      </div>
+      <p class="modal-texto">Últimas versiones <strong>publicadas</strong> de cada archivo. Al restaurar, la versión se carga <strong>como borrador</strong> para que la revises en la vista previa — nada se publica hasta que uses «Publicar cambios», y la restauración misma se puede deshacer.</p>
+      <div id="versiones-lista" class="versiones-lista">
+        <p class="form-vacio">Cargando el historial…</p>
+      </div>
+    </div>
+  </div>
+
+  <!-- ============ MODAL: CONFIRMACIÓN ============ -->
+  <div id="modal-confirmar" class="modal" hidden role="dialog" aria-modal="true" aria-labelledby="modal-confirmar-texto">
+    <div class="modal-caja modal-caja-chica">
+      <p id="modal-confirmar-texto" class="modal-texto"></p>
+      <div class="modal-acciones">
+        <button id="modal-confirmar-no" class="btn-borde" type="button">Cancelar</button>
+        <button id="modal-confirmar-si" class="btn-rojo" type="button">Aceptar</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- ============ ZONA DE AVISOS (TOAST) ============ -->
+  <div id="toasts" class="toasts" aria-live="polite"></div>
+
+  <script src="editor-form.js"></script>
+  <script src="editor-inline.js"></script>
+  <script src="editor-media.js"></script>
+  <script src="editor.js"></script>
+</body>
+</html>

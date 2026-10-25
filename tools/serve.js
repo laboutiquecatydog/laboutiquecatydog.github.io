@@ -83,7 +83,12 @@ const server = http.createServer((req, res) => {
 
   function sendFile(fp, stat, res) {
     const type = TYPES[path.extname(fp).toLowerCase()] || "application/octet-stream";
-    res.writeHead(200, { "Content-Type": type, "Cache-Control": "no-store" });
+    res.writeHead(200, {
+      "Content-Type": type,
+      "Cache-Control": "no-store",
+      /* Evita que el navegador "adivine" tipos de contenido (MIME sniffing) */
+      "X-Content-Type-Options": "nosniff"
+    });
     fs.createReadStream(fp).pipe(res).on("error", () => send(res, 500, "Error de lectura"));
   }
 });
