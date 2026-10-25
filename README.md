@@ -45,7 +45,7 @@ Una sola página con navegación por anclas. Los bloques y su orden se definen e
 | Header | `.site-header` | Logo, menú, botón de WhatsApp |
 | Footer | `.site-footer` | Marca, secciones, datos de contacto, redes y año dinámico |
 
-**Funcionalidades:** menú móvil con overlay y scroll-spy, carruseles con teclado/touch/autoplay (pausa al enfocar o pasar el mouse), animaciones de aparición al hacer scroll, barra de progreso de scroll, título de portada con efecto de escritura (con red de seguridad de 6 s), enlaces de WhatsApp/Google Maps generados desde los datos, filtros de productos por mascota con repaginación, secciones ocultables desde el panel (`oculto`), SEO dinámico desde `sitio.json` (título, descripción, Open Graph y JSON-LD `PetStore`), y **caminos decorativos de huellas** de perro y gato entre las secciones.
+**Funcionalidades:** menú móvil con overlay y scroll-spy, carruseles con teclado/touch/autoplay (pausa al enfocar o pasar el mouse), animaciones de aparición al hacer scroll, barra de progreso de scroll, título de portada con efecto de escritura **y revelado del resto del contenido en paralelo** (todo visible en ~0,5 s, título completo en ~1,6 s), enlaces de WhatsApp/Google Maps generados desde los datos, filtros de productos por mascota con repaginación, secciones ocultables desde el panel (`oculto`), SEO dinámico desde `sitio.json` (título, descripción, Open Graph y JSON-LD `PetStore`), y **caminos decorativos de huellas** de perro y gato entre las secciones.
 
 ---
 
@@ -194,6 +194,7 @@ Es una lista `secciones`. **El orden de la lista es el orden en la web.** Cada s
 | Campos avanzados | Todo lo que antes hacía el panel antiguo, integrado: `id`/anclas (con advertencia), `srcset`/`sizes`/medidas/prioridad en cajas plegables, `huella` del camino decorativo (con opción «ninguna») |
 | SEO | En «Datos del local», bloque **SEO** con título y descripción (con pistas de longitud). JSON-LD con URLs absolutas, horarios leídos de los datos, `url`, `logo`, `priceRange` |
 | Publicar | Botón «Publicar cambios» → 1 commit por archivo que haya cambiado (portada y/o datos del local). En ~1 min está en la web |
+| Ayuda integrada | Botón **«?»** en la barra superior: guía corta y clara de todo el panel (textos, fotos, productos, publicar, deshacer, sesión) |
 
 **Modelo de datos del editor:** los cambios viven como **borrador** en el navegador (borrador automático en `localStorage`, se recupera al volver a entrar) hasta «Publicar cambios» o «Descartar». La **única excepción** es la subida de imágenes nuevas, que se commitea en el momento (una imagen en borrador no tiene sentido). Si el archivo cambió en GitHub mientras editabas (p. ej. desde Sveltia), al publicar se detecta el conflicto y se ofrece recargar o quedarse con el borrador.
 

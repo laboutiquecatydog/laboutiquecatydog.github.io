@@ -85,6 +85,9 @@
           <button id="boton-copias" class="btn-ty btn-top-ico" type="button" title="Copias de seguridad del contenido" aria-label="Copias de seguridad">
             <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="9" y="9" width="11" height="11" rx="2"/><path d="M5 15V6a2 2 0 0 1 2-2h9"/></svg>
           </button>
+          <button id="boton-ayuda" class="btn-ty btn-top-ico" type="button" title="¿Cómo uso el panel?" aria-label="Ayuda del panel">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M9.1 9a3 3 0 0 1 5.8 1c0 2-3 2.4-3 4.4"/><circle cx="12" cy="17.6" r="0.4" fill="currentColor"/><circle cx="12" cy="12" r="10"/></svg>
+          </button>
           <button id="boton-publicar" class="btn-rojo" type="button" disabled>Publicar cambios</button>
           <button id="boton-descartar" class="btn-borde" type="button" disabled>Descartar</button>
           <button id="boton-salir" class="btn-ty" type="button" aria-label="Cerrar sesión">Salir</button>
@@ -177,6 +180,44 @@
           <button id="media-subir-btn" class="btn-rojo btn-bloque" type="button">Subir y usar</button>
           <p class="campo-pista">La imagen se agrega al repositorio en el momento (un commit). Para verla en la web pública, esperá ~1 minuto y usá «Refrescar».</p>
         </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ============ MODAL: AYUDA DEL PANEL ============ -->
+  <div id="modal-ayuda" class="modal" hidden role="dialog" aria-modal="true" aria-labelledby="modal-ayuda-titulo">
+    <div class="modal-caja">
+      <div class="modal-cabecera">
+        <h2 id="modal-ayuda-titulo">¿Cómo uso el panel?</h2>
+        <button class="boton-x" type="button" aria-label="Cerrar">&times;</button>
+      </div>
+      <p class="modal-texto">La idea es simple: <strong>lo que ves en la miniatura es lo que se edita</strong>. Tocá cualquier texto o foto de la vista previa y cambialo ahí mismo. Nada se publica hasta que lo digas.</p>
+
+      <div class="ayuda-grid">
+        <section class="ayuda-item">
+          <h3>Editar textos</h3>
+          <p>Tocá el texto en la vista previa (título, párrafos, botones, menú, pie) y escribí encima. <kbd>Enter</kbd> guarda, <kbd>Esc</kbd> deshace lo escrito.</p>
+        </section>
+        <section class="ayuda-item">
+          <h3>Cambiar o subir fotos</h3>
+          <p>Tocá una foto en la vista previa. Podés elegir una existente o subir una de tu PC: se optimiza sola y queda lista para la web.</p>
+        </section>
+        <section class="ayuda-item">
+          <h3>Secciones y productos</h3>
+          <p>La lista de la izquierda ordena la página: arrastrala para reordenar, el ojo la oculta, «+ Agregar sección» suma una nueva. Los productos se agregan o quitan desde el modo <strong>Textos</strong> o con la ✕ que aparece sobre el producto.</p>
+        </section>
+        <section class="ayuda-item">
+          <h3>Publicar (o no)</h3>
+          <p>Tus cambios quedan como <strong>borrador</strong> hasta «Publicar cambios» (~1 minuto en verse en la web). «Descartar» vuelve todo a lo último publicado.</p>
+        </section>
+        <section class="ayuda-item">
+          <h3>Si algo sale mal</h3>
+          <p>Las flechas ↶ ↷ (o <kbd>Ctrl+Z</kbd>) deshacen paso a paso. El reloj restaura versiones ya publicadas. Las copias guardan estados y las descargás a tu PC. Nada se pierde: GitHub guarda todo el historial.</p>
+        </section>
+        <section class="ayuda-item">
+          <h3>La sesión</h3>
+          <p>Ingresás con tu cuenta de GitHub y la sesión vive en esta pestaña: al cerrarla, se cierra sola. Para volver a entrar, abrí el panel y «Iniciar sesión».</p>
+        </section>
       </div>
     </div>
   </div>

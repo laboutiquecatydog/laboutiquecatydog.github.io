@@ -100,6 +100,20 @@ a { color: var(--tinta); }
 .copias-acciones .btn-borde, .copias-importar { cursor: pointer; }
 .copias-importar { display: inline-flex; align-items: center; padding: 8px 16px; }
 
+/* Ayuda del panel */
+.ayuda-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(230px, 1fr)); gap: 12px; margin-top: 4px; }
+.ayuda-item {
+  border: 1px solid var(--gris-200); border-radius: 12px;
+  background: var(--gris-50); padding: 12px 14px;
+}
+.ayuda-item h3 { margin: 0 0 6px; font-size: 0.9rem; }
+.ayuda-item p { margin: 0; font-size: 0.82rem; color: var(--gris-700); line-height: 1.5; }
+.ayuda-item kbd {
+  font-family: ui-monospace, Consolas, monospace; font-size: 0.72rem;
+  background: var(--blanco); border: 1px solid var(--gris-300); border-bottom-width: 2px;
+  border-radius: 5px; padding: 1px 5px;
+}
+
 .btn-grande { padding: 13px 26px; font-size: 1rem; }
 .btn-chico { padding: 5px 12px; font-size: 0.82rem; }
 .btn-bloque { width: 100%; }

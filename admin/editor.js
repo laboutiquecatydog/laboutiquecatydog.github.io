@@ -1437,6 +1437,11 @@
       if (f) { importarCopia(f); }
       ev.target.value = "";
     });
+
+    /* Ayuda del panel */
+    $("#boton-ayuda").addEventListener("click", function () {
+      $("#modal-ayuda").hidden = false;
+    });
     document.addEventListener("keydown", function (ev) {
       if (!(ev.ctrlKey || ev.metaKey)) { return; }
       var tecla = String(ev.key || "").toLowerCase();

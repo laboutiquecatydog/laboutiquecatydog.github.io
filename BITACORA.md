@@ -146,3 +146,16 @@ Objetivo: verificar que el sitio, el panel y el login sean seguros para el clien
 - Verificación final: sitio renderiza completo con CSP + sanitizador (0 errores, 0 violaciones), editor funcional.
 
 **Estado**: APROBADO para presentar. Siguiente paso con visto bueno del cliente: push a producción → re-deploy del Worker hardenado → Search Console + Google Business Profile.
+
+---
+
+## 2026-10-24 · Cierre — ayuda integrada, carga ágil y publicación en producción
+
+Últimos ajustes pedidos por el desarrollador y **push a producción** con su instrucción explícita.
+
+- **Ayuda integrada en el panel**: botón «?» en el topbar → modal con 6 guías cortas (editar textos, fotos, secciones y productos, publicar, recuperación ante errores, sesión). Cierra con clic afuera o la ✕ como el resto de los modales.
+- **Carga ágil y revelado suave** (feedback: «lo último en cargar es el título, subtítulo e imagen»): la causa era que todo el contenido esperaba a que el título terminara de escribirse (~2,5–3 s). Ahora el bloque se revela **en paralelo** a la escritura (`enter()` a los 90 ms con la cascada escalonada existente) y el typewriter va más liviano (19 ms/carácter, arranque a 120 ms, pausa de segmento ×3). Medido: contenido visible a ~0,5 s, título completo a ~1,6 s (antes ~3 s). Verificado con headless + sin violaciones de CSP.
+- **Auditoría visual de la portada**: carrusel del hero a 3:2 (~505×337 px en desktop), tamaño correcto; nota documentada: las fotos fuente son 2.17:1, así que se recortan los laterales al presentarlas en 3:2 — si alguna foto se viera apretada, la solución es subir una versión más cuadrada desde el panel.
+- **Push a producción** con instrucción explícita del desarrollador. Sveltia queda retirado también en producción (`/admin/` redirige al editor visual; `config.yml` se borra del repo). Auditoría del paw-trail registrada (sin cambios) con tres opciones de mejora propuestas para decisión del cliente.
+- Pendiente post-push: re-deploy del Worker en Cloudflare con `tools/worker-editor.js` hardenado (paso a paso en el informe de seguridad) y Search Console + Google Business Profile con visto bueno.
+- Documentación: **`guias/PRESENTACION-CLIENTE.md`** (guía de la reunión de entrega: checklist, guion de demo de 15 min, argumentos de valor, preguntas difíciles y qué no prometer) y README actualizado (ayuda «?», tiempos de la intro).

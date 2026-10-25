@@ -511,13 +511,18 @@
     var reduce = false;
     try { reduce = window.matchMedia("(prefers-reduced-motion: reduce)").matches; } catch (e) {}
 
-    /* Mostrar el bloque (subtÃtulo, botones, imagen) siempre. */
+    /* Mostrar el bloque (subtítulo, botones, imagen) siempre. */
     function enter() { hero.classList.add("is-entered"); }
 
     var title = hero.querySelector(".hero-title[data-type]");
     if (!title || reduce) { enter(); return; }
 
-    /* El tÃtulo puede tener marcado (**acento**). Se reconstruye como
+    /* El contenido acompaña a la escritura: aparece en paralelo con una
+       entrada suave y escalonada, en vez de esperar al final del título.
+       La página se siente lista en menos de un segundo. */
+    window.setTimeout(enter, 90);
+
+    /* El título puede tener marcado (**acento**). Se reconstruye como
        secuencia de nodos de texto repetibles respetando los <span>. */
     var caret = document.createElement("span");
     caret.className = "type-caret";
@@ -540,8 +545,8 @@
     });
     var si = 0, ci = 0;
     var halted = false;
-    /* Velocidad natural: ~28 ms por carÃ¡cter, con arranque inmediato. */
-    var SPEED = 28;
+    /* Ritmo ágil: ~19 ms por carácter (antes 28), con arranque rápido. */
+    var SPEED = 19;
 
     function placeCaret() {
       var step = steps[si];
@@ -550,7 +555,7 @@
     }
 
     function tick() {
-      /* halted: el watchdog ya resolviÃ³ la secuencia; no seguir escribiendo. */
+      /* halted: el watchdog ya resolvió la secuencia; no seguir escribiendo. */
       if (halted) return;
       if (si >= steps.length) {
         title.classList.add("is-typed");
@@ -570,12 +575,12 @@
       placeCaret();
       /* Pausa algo mayor al cerrar un segmento (**negrita**), casi nula
          entre caracteres: ritmo de escritura natural. */
-      window.setTimeout(tick, done ? SPEED * 5 : SPEED);
+      window.setTimeout(tick, done ? SPEED * 3 : SPEED);
     }
 
-    /* PequeÃ±a pausa inicial para que la pÃ¡gina "se asiente" antes de escribir. */
+    /* Arranque rápido: la escritura empieza apenas se acomoda la página. */
     placeCaret();
-    window.setTimeout(tick, 260);
+    window.setTimeout(tick, 120);
 
     /* Red de seguridad de la secuencia completa: si la escritura no terminÃ³
        (pestaÃ±a en segundo plano, temporizadores limitados, cualquier fallo),
