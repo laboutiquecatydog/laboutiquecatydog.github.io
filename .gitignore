@@ -4,6 +4,9 @@ Contenido Imagenes/
 # Copias de seguridad históricas (no forman parte del sitio publicado)
 _backup/
 
+# Grafo de conocimiento generado por la herramienta de análisis (graphify)
+graphify-out/
+
 # Sistema
 .DS_Store
 Thumbs.db
