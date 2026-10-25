@@ -600,6 +600,28 @@
     }, 6000);
   }
 
+  /* ------------------- Acceso discreto al panel -------------------------- */
+  /* Tres clics seguidos en el logo (1,4 s) abren el panel de administración.
+     Es solo un atajo discreto: el login con GitHub sigue siendo obligatorio
+     y /admin/ está excluido de los buscadores. Desactivado si la página
+     está embebida (la vista previa del editor). */
+  function setupAccesoPanel() {
+    var brand = document.querySelector(".brand");
+    if (!brand || window.top !== window.self) { return; }
+    var clicks = 0;
+    var timer = null;
+    brand.addEventListener("click", function () {
+      clicks += 1;
+      if (timer) { window.clearTimeout(timer); }
+      if (clicks >= 3) {
+        clicks = 0;
+        window.location.href = "/admin/editor.html";
+        return;
+      }
+      timer = window.setTimeout(function () { clicks = 0; }, 1400);
+    });
+  }
+
   /* ------------------------ Progreso de scroll -------------------------- */
   /* Barra fina de marca en el borde superior. Detalle funcional, sin costo. */
   function setupScrollProgress() {
@@ -772,6 +794,7 @@
     setupCarousels();
     setupProductFilters();
     setupProductPagination();
+    setupAccesoPanel();
       setupMobileMenu();
       setupHeaderScroll();
       setupScrollSpy();

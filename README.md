@@ -45,7 +45,7 @@ Una sola página con navegación por anclas. Los bloques y su orden se definen e
 | Header | `.site-header` | Logo, menú, botón de WhatsApp |
 | Footer | `.site-footer` | Marca, secciones, datos de contacto, redes y año dinámico |
 
-**Funcionalidades:** menú móvil con overlay y scroll-spy, carruseles con teclado/touch/autoplay (pausa al enfocar o pasar el mouse), animaciones de aparición al hacer scroll, barra de progreso de scroll, título de portada con efecto de escritura **y revelado del resto del contenido en paralelo** (todo visible en ~0,5 s, título completo en ~1,6 s), enlaces de WhatsApp/Google Maps generados desde los datos, filtros de productos por mascota con repaginación, secciones ocultables desde el panel (`oculto`), SEO dinámico desde `sitio.json` (título, descripción, Open Graph y JSON-LD `PetStore`), y **caminos decorativos de huellas** de perro y gato entre las secciones.
+**Funcionalidades:** menú móvil con overlay y scroll-spy, carruseles con teclado/touch/autoplay (pausa al enfocar o pasar el mouse), animaciones de aparición al hacer scroll, barra de progreso de scroll, título de portada con efecto de escritura **y revelado del resto del contenido en paralelo** (todo visible en ~0,5 s, título completo en ~1,6 s), enlaces de WhatsApp/Google Maps generados desde los datos, filtros de productos por mascota con repaginación, secciones ocultables desde el panel (`oculto`), SEO dinámico desde `sitio.json` (título, descripción, Open Graph y JSON-LD `PetStore`), **caminos decorativos de huellas** de perro y gato entre las secciones, y **acceso discreto al panel: tres clics seguidos en el logo** (el login con GitHub sigue siendo obligatorio; desactivado dentro de la vista previa del editor).
 
 ---
 

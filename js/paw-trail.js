@@ -26,12 +26,15 @@
   var XLINK_NS = "http://www.w3.org/1999/xlink";
   var PAW_BLUE = "#315A9E";
   var SEED = 0xC0FFEE;        // patrón natural pero reproducible
-  var WAVES = 2.2;            // ondas por tramo (ni recta ni ruido)
+  var ONDA_PX = 340;           // px de sección por onda completa (antes: cantidad fija → onda "estirada" en secciones largas)
+  var ONDAS_MIN = 1.15;
+  var ONDAS_MAX = 4.6;
   var AMPLITUDE_MAX = 55;     // px de amplitud del serpenteo (tope)
-  var STEP_OFFSET_MAX = 14;   // px de zigzag por paso (vaivén de pisada)
-  var STEP_JITTER = 8;        // ±4px de ruido por huella
-  var STEP_SPACING = 56;      // px verticales aproximados entre huellas
-  var CONTAINER_MAX = 1180;   // coincide con --container del CSS
+  var STEP_OFFSET_MAX = 14;    // px de zigzag por paso (vaivén de pisada)
+  var STEP_JITTER = 8;         // ±4px de ruido por huella
+  var STEP_SPACING = 56;       // px verticales aproximados entre huellas
+  var CONTAINER_MAX = 1180;    // coincide con --container del CSS
+  var DOBLE_PROB = 0.08;       // probabilidad de pisada doble (pausa del animal)
 
   /* Tabla clásica de respaldo (si nadie pasa pagina.json, p. ej. el
      main.js publicado todavía no lo hace). El orden y los lados reales
@@ -185,6 +188,13 @@
       if (steps < 8) { steps = 8; }
       if (steps > 26) { steps = 26; }
 
+      /* Onda orgánica: la cantidad de ciclos sale de la ALTURA de la
+        sección (una onda completa cada ~340 px), acotada. Secciones
+        largas ondean más veces en vez de estirar la misma onda. */
+      var waves = bandH / ONDA_PX;
+      if (waves < ONDAS_MIN) { waves = ONDAS_MIN; }
+      if (waves > ONDAS_MAX) { waves = ONDAS_MAX; }
+
       var ds = 1 / (steps - 1 || 1);
       var phase = (prng() * 2 - 1) * Math.PI; // fase distinta por tramo
       var isRight = seg.side === "R";
@@ -196,7 +206,7 @@
         var yFinal = bandTop + t * bandH;
 
         // X: un solo carril — onda (solo en X) + zigzag de paso + jitter
-        var sine = Math.sin(t * Math.PI * 2 * WAVES + phase);
+        var sine = Math.sin(t * Math.PI * 2 * waves + phase);
         var paso = (i % 2 === 1) ? stepOffset : -stepOffset;
         var xLane = baseX + sine * amplitudeX + paso +
           (prng() - 0.5) * STEP_JITTER;
@@ -205,7 +215,7 @@
         // Orientación: la huella SIEMPRE con los dedos hacia arriba, con
         // una inclinación suave que sigue la onda (clamp ±22°) + jitter
         // de pisada ±12°. Nunca boca abajo.
-        var sine2 = Math.sin((t + ds) * Math.PI * 2 * WAVES + phase);
+        var sine2 = Math.sin((t + ds) * Math.PI * 2 * waves + phase);
         var xS1 = baseX + sine * amplitudeX;
         var xS2 = baseX + sine2 * amplitudeX;
         var dxPx = isRight ? (xS1 - xS2) : (xS2 - xS1);
@@ -218,7 +228,8 @@
         // invisible sin encoger las huellas (nada de huellas diminutas).
         var edgeFade = t < 0.06 ? (t / 0.06)
           : (t > 0.94 ? ((1 - t) / 0.06) : 1);
-        var pawScale = 0.85 + prng() * 0.3;                // 0.85–1.15
+        /* Tamaño con variación marcada (0.8–1.25): natural, no uniforme */
+        var pawScale = 0.8 + prng() * 0.45;
         var pawOpacity = (0.4 + prng() * 0.2) * edgeFade;  // 0–0.60
         if (pawOpacity < 0.05) { continue; }
 
@@ -235,6 +246,25 @@
         });
         use.setAttributeNS(XLINK_NS, "xlink:href", href);
         svg.appendChild(use);
+
+        /* Pisada doble ocasional (misma mascota): el animal apoyó las dos
+           patas al frenar — igual lado de la canaleta, desplazada y con
+           su propia inclinación. Suma vida sin ensuciar. */
+        if (prng() < DOBLE_PROB) {
+          var gemelaX = xLane + (prng() - 0.5) * 26 + (isRight ? 12 : -12);
+          var gemelaFinalX = isRight ? (mainW - gemelaX) : gemelaX;
+          var gemelaTransform = "translate(" + n1(gemelaFinalX) + " " +
+            n1(yFinal + (prng() - 0.5) * 6) +
+            ") rotate(" + n1(angleFinal + (prng() - 0.5) * 26) +
+            ") scale(" + (pawScale * 0.86).toFixed(3) + ")";
+          var gemela = svgEl("use", {
+            transform: gemelaTransform,
+            opacity: (pawOpacity * 0.75).toFixed(3),
+            href: href
+          });
+          gemela.setAttributeNS(XLINK_NS, "xlink:href", href);
+          svg.appendChild(gemela);
+        }
       }
     }
 

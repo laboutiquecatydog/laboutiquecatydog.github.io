@@ -353,6 +353,11 @@
       im.className = "img-thumb";
       im.alt = "";
       try { im.src = new URL(valor, location.origin).href; } catch (e2) { im.hidden = true; }
+      /* Imágenes recién subidas: mostrar la copia local en la miniatura
+         (todavía no están en este disco) */
+      if (window.BQ_SUBIDAS && window.BQ_SUBIDAS[valor]) {
+        im.src = window.BQ_SUBIDAS[valor];
+      }
       im.onerror = function () { im.hidden = true; };
       fila.appendChild(im);
     }

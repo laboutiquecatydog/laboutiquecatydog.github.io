@@ -322,6 +322,11 @@
           ancho: pendiente.ancho,
           alto: pendiente.alto
         };
+        /* Copia local para la vista previa: el archivo ya está en GitHub
+           pero todavía no en este disco — el editor la inyecta en la
+           miniatura para verla al instante. */
+        window.BQ_SUBIDAS = window.BQ_SUBIDAS || {};
+        window.BQ_SUBIDAS[resultado.imagen] = pendiente.prevista;
         var elegir = ACTUAL.alElegir;
         cerrar();
         elegir(resultado);

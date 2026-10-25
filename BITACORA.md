@@ -159,3 +159,31 @@ Objetivo: verificar que el sitio, el panel y el login sean seguros para el clien
 - **Push a producción** con instrucción explícita del desarrollador. Sveltia queda retirado también en producción (`/admin/` redirige al editor visual; `config.yml` se borra del repo). Auditoría del paw-trail registrada (sin cambios) con tres opciones de mejora propuestas para decisión del cliente.
 - Pendiente post-push: re-deploy del Worker en Cloudflare con `tools/worker-editor.js` hardenado (paso a paso en el informe de seguridad) y Search Console + Google Business Profile con visto bueno.
 - Documentación: **`guias/PRESENTACION-CLIENTE.md`** (guía de la reunión de entrega: checklist, guion de demo de 15 min, argumentos de valor, preguntas difíciles y qué no prometer) y README actualizado (ayuda «?», tiempos de la intro).
+
+---
+
+## 2026-10-24 · Ronda de feedback: fixes del panel, huellas orgánicas y entrega
+
+Ronda de correcciones sobre feedback real de uso + preparación de la entrega al cliente final.
+
+### Correcciones de bugs del panel
+- **La pantalla saltaba al tocar una foto en productos** (muy molesto: "toco una imagen y tengo que bajar de nuevo"): dos causas corregidas. (1) Tocar algo dentro de la vista **selecciona la sección sin hacer scroll** — `seleccionarSeccion(indice, hacerScroll)`: scroll solo al elegir desde la lista, nunca desde clics dentro de la propia vista. (2) El re-render de la vista **conserva la posición de scroll** (`scrollY` capturado y restaurado en `programarRerender`).
+- **Imágenes recién subidas no se veían en el producto en la vista previa local** (salían vacías): el archivo vive en GitHub pero todavía no en el disco local. `BQMedia` deja una copia en memoria (`window.BQ_SUBIDAS[ruta] = dataURL`) y el editor la inyecta en la vista y en las miniaturas del formulario → el resultado se ve **al instante** (en la web pública aparece sola cuando Pages reconstruye, ~1 min).
+
+### Huellas — Opción A (orgánico), elegida por el desarrollador
+- Longitud de onda **por altura de sección** (una onda cada ~340 px, acotada 1,15–4,6): las secciones largas ondean más veces en vez de estirar la misma onda → dejó de verse genérico.
+- **Pisadas dobles ocasionales** (~8 %, misma mascota, desplazadas y con inclinación propia): pausas del animal que suman vida.
+- Tamaño con variación más marcada (0,8–1,25). Se conserva: semilla determinista, fade de extremos, lado por campo `huella`, móvil (solo primer y último tramo).
+- *Nota de la corrida:* un typo `AMPLITUD_MAX` tumbaba el arranque del sitio (detectado por el E2E); corregido y re-verificado (desktop: 91 huellas con dobles; móvil: 37).
+
+### Acceso discreto al panel
+- **Tres clics seguidos en el logo** (ventana de 1,4 s) → abre `/admin/editor.html`. Inofensivo: no expone nada, el login con GitHub sigue siendo obligatorio, `/admin/` sigue excluido de buscadores. Desactivado cuando la página está embebida (vista previa del editor).
+
+### Pase móvil verificado (390×844)
+Sin overflow horizontal, hero a una columna, menú hamburguesa accesible, paginación oculta con catálogo corto, huellas en modo móvil. Sin regresiones.
+
+### Entrega al cliente
+- **`guias/ENTREGA-CLIENTE.md`**: qué necesita el cliente (nada instalado: navegador + sus cuentas GitHub/Cloudflare con 2FA), rol del pendrive (respaldo, no requisito), por qué NO instalarle Node/Git/GitHub Desktop, el flujo 100 % web, y checklist de la reunión de entrega.
+- Push pendiente del lado del desarrollador (GitHub Desktop con la cuenta del cliente; el shell local tiene logueada la cuenta equivocada `nicolabarranco27-a11y`).
+
+**Verificación E2E (0 errores):** scroll determinista con `scroll-behavior: auto` inyectado (tocar foto: 2937→2937 exacto; re-render: 2937→2937), triple-click navega al panel, subida visible al instante en la vista (src=data:), huellas presentes desktop/móvil, móvil sin overflow.

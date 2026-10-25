@@ -853,7 +853,8 @@
         restaurarHistorial(direccion);
       },
       alSeleccionar: function (indice) {
-        seleccionarSeccion(indice);
+        /* Clic dentro de la vista: resaltar sin mover la pantalla */
+        seleccionarSeccion(indice, false);
         var li = document.querySelector('.item-seccion[data-indice="' + indice + '"]');
         if (li && li.scrollIntoView) { li.scrollIntoView({ block: "nearest" }); }
       },
@@ -862,8 +863,25 @@
     return GANCHOS_INLINE;
   }
 
+  /* Las imágenes subidas viven en GitHub pero todavía no en este disco:
+     BQMedia deja una copia en memoria y acá la inyectamos en la vista
+     previa para ver el resultado al instante (en la web pública aparece
+     sola cuando Pages reconstruye, ~1 minuto). */
+  function aplicarSubidasEnVista(marco) {
+    var doc = marco.contentDocument;
+    var subidas = window.BQ_SUBIDAS;
+    if (!doc || !subidas) { return; }
+    Object.keys(subidas).forEach(function (ruta) {
+      var imgs = doc.querySelectorAll('img[src="' + ruta + '"]');
+      for (var i = 0; i < imgs.length; i++) {
+        imgs[i].src = subidas[ruta];
+      }
+    });
+  }
+
   /* Re-renderiza la vista previa con los datos del editor (con pausa
-     corta para no pisar ediciones consecutivas). */
+     corta para no pisar ediciones consecutivas). La posición de scroll
+     se conserva: cambiar una foto no te puede mandar al inicio. */
   var timerRerender = 0;
   function programarRerender() {
     window.clearTimeout(timerRerender);
@@ -874,12 +892,17 @@
       /* El re-render reemplaza el DOM de la vista: cerrar la edición
          abierta (si quedara una) sin escribir su valor. */
       if (window.BQInline) { BQInline.cancelar(); }
+      var y = win.scrollY || 0;
       if (win.BQPreview && datosSitio && datos) {
         try { win.BQPreview.renderizar(datosSitio, datos); } catch (e2) {}
       }
+      aplicarSubidasEnVista(marco);
       BQInline.aplicar(marco, ganchosInline());
       if (seccionAbierta >= 0 && datos && datos.secciones[seccionAbierta]) {
         BQInline.seleccionar(datos.secciones[seccionAbierta].id, false);
+      }
+      if (y > 0) {
+        try { win.scrollTo(0, y); } catch (e3) { /* best-effort */ }
       }
     }, 220);
   }
@@ -899,6 +922,7 @@
           if (win && win.BQPreview && datosSitio && datos) {
             try { win.BQPreview.renderizar(datosSitio, datos); } catch (e2) {}
           }
+          aplicarSubidasEnVista(marco);
           BQInline.aplicar(marco, ganchosInline());
           if (seccionAbierta >= 0 && datos && datos.secciones[seccionAbierta]) {
             BQInline.seleccionar(datos.secciones[seccionAbierta].id, false);
@@ -912,15 +936,18 @@
   }
 
   /* --------------------- Selección y edición directa -------------------- */
-  /* Selecciona una sección: resalta en la lista, en la vista previa y
-     mantiene el formulario sincronizado si está en modo «Textos». */
-  function seleccionarSeccion(indice) {
+  /* Selecciona una sección: resalta en la lista y en la vista previa.
+     hacerScroll: true al elegir desde la LISTA (navega la vista hasta la
+     sección); false cuando el clic vino de la propia vista — si estás
+     mirando el 5º producto y tocás su foto, la pantalla no puede
+     saltar hacia arriba. */
+  function seleccionarSeccion(indice, hacerScroll) {
     if (!datos || !datos.secciones[indice]) { return; }
     seccionAbierta = indice;
     $$(".item-seccion").forEach(function (li) {
       li.classList.toggle("is-seleccionada", parseInt(li.getAttribute("data-indice"), 10) === indice);
     });
-    BQInline.seleccionar(datos.secciones[indice].id, true);
+    BQInline.seleccionar(datos.secciones[indice].id, hacerScroll !== false);
     if (pestanaActual === "secciones" && modoPanel === "texto") {
       actualizarFormularioActual();
     }
