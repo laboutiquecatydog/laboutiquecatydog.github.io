@@ -276,11 +276,12 @@ a { color: var(--tinta); }
   padding: 9px 8px 9px 10px;
   transition: border-color 0.15s, box-shadow 0.15s, opacity 0.15s;
 }
-.item-seccion:hover { border-color: var(--gris-300); box-shadow: var(--sombra-chica); }
+.item-seccion:hover { border-color: var(--gris-300); box-shadow: var(--sombra-chica); transform: translateY(-1px); }
 .item-seccion.is-seleccionada {
   border-color: var(--acento);
   box-shadow: inset 3px 0 0 var(--acento), var(--sombra-chica);
 }
+.item-seccion { transition: border-color 0.15s, box-shadow 0.15s, transform 0.15s; }
 .item-seccion.is-drag { opacity: 0.45; }
 .item-seccion.is-insercion { box-shadow: inset 0 2px 0 var(--acento); }
 .item-seccion.is-oculta { opacity: 0.55; }
@@ -598,6 +599,27 @@ a { color: var(--tinta); }
   border-color: var(--acento) !important;
   color: var(--acento) !important;
   background: #fbecec !important;
+}
+
+/* Búsqueda de productos */
+.lista-buscar {
+  width: 100%; border: 1px solid var(--gris-300); border-radius: 10px;
+  padding: 8px 12px; font-family: var(--fuente); font-size: 0.86rem;
+  background: var(--blanco); color: var(--tinta); margin-bottom: 10px;
+  transition: border-color 0.15s, box-shadow 0.15s;
+}
+.lista-buscar:focus {
+  outline: none; border-color: var(--acento);
+  box-shadow: 0 0 0 3px rgba(192, 39, 45, 0.08);
+}
+.lista-buscar::placeholder { color: var(--gris-300); }
+
+/* Header pegajoso: el título queda fijo mientras scrolleás el formulario */
+.form-encabezado {
+  position: sticky; top: 0; z-index: 5;
+  background: var(--gris-50);
+  padding-bottom: 10px; margin-bottom: 10px;
+  border-bottom: 1px solid var(--gris-200);
 }
 
 /* -------------------- Imágenes: modal selector (W3) --------------------- */

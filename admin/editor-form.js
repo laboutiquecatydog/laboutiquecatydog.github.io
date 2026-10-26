@@ -505,7 +505,8 @@
 
     var titulo = crear("h3");
     titulo.className = "lista-titulo";
-    titulo.textContent = DICT_LISTAS[clave] || etiquetaDe(clave);
+    titulo.textContent = (DICT_LISTAS[clave] || etiquetaDe(clave)) +
+      (Array.isArray(valor) && valor.length ? " (" + valor.length + ")" : "");
     caja.appendChild(titulo);
 
     if (!valor || valor.length === 0) {
@@ -517,10 +518,34 @@
 
     var esEditable = EDITABLES[clave] && Array.isArray(valor);
 
+    /* Búsqueda: aparece solo en productos con 4 o más items (el catálogo
+       crece y encontrar uno entre muchos se vuelve difícil) */
+    if (clave === "productos" && valor && valor.length >= 4) {
+      var buscar = crear("input");
+      buscar.type = "text";
+      buscar.className = "lista-buscar";
+      buscar.placeholder = "Buscar producto…";
+      buscar.setAttribute("aria-label", "Buscar producto por nombre");
+      buscar.addEventListener("input", function () {
+        var texto = buscar.value.toLowerCase().trim();
+        var items = caja.querySelectorAll(".item-lista");
+        Array.prototype.forEach.call(items, function (item) {
+          if (item.closest(".lista-buscar")) { return; }
+          var strong = item.querySelector(".item-resumen-info strong");
+          var visible = !texto ||
+            (strong && strong.textContent.toLowerCase().indexOf(texto) !== -1);
+          item.style.display = visible ? "" : "none";
+        });
+      });
+      caja.appendChild(buscar);
+    }
+
     (valor || []).forEach(function (item, i) {
       var cajaItem = crear("details");
       cajaItem.className = "item-lista";
-      cajaItem.open = (valor || []).length === 1;
+      /* El primero abre solo: entrar y ver 5 cerrados da pereza.
+         En listas de un solo item, también abre. */
+      cajaItem.open = i === 0 || (valor || []).length === 1;
 
       /* Borde de color según mascota (productos) */
       var petClase = claseMascota(item);
