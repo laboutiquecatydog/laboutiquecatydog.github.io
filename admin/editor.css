@@ -440,10 +440,34 @@ a { color: var(--tinta); }
   font-size: 0.72rem; font-weight: 700; text-transform: uppercase; letter-spacing: 0.06em;
   color: var(--gris-600); margin: 12px 0 8px;
 }
-.item-lista { border: 1px solid var(--gris-200); border-radius: 12px; background: var(--blanco); margin: 0 0 8px; overflow: hidden; }
+
+/* Card del item: sombra suave, esquinas redondeadas, borde de color */
+.item-lista {
+  border: 1px solid var(--gris-200);
+  border-radius: 14px;
+  background: var(--blanco);
+  margin: 0 0 10px;
+  overflow: hidden;
+  transition: border-color 0.15s, box-shadow 0.15s;
+  box-shadow: 0 1px 3px rgba(18, 18, 18, 0.04);
+}
+.item-lista:hover {
+  border-color: var(--gris-300);
+  box-shadow: 0 3px 12px rgba(18, 18, 18, 0.08);
+}
+.item-lista[open] {
+  box-shadow: 0 6px 20px rgba(18, 18, 18, 0.08);
+}
+
+/* Borde izquierdo de color según mascota */
+.item-lista.pet-perro { border-left: 4px solid #2563eb; }
+.item-lista.pet-gato { border-left: 4px solid #ea580c; }
+.item-lista.pet-ambos { border-left: 4px solid #059669; }
+
 .item-lista summary {
-  cursor: pointer; padding: 10px 14px; font-size: 0.88rem; font-weight: 600;
+  cursor: pointer; padding: 10px 36px 10px 14px; font-size: 0.88rem; font-weight: 600;
   list-style: none; position: relative; user-select: none; color: var(--tinta);
+  display: flex; align-items: center; min-height: 52px;
 }
 .item-lista summary::after {
   content: "+"; position: absolute; right: 14px; top: 50%; transform: translateY(-50%);
@@ -452,8 +476,59 @@ a { color: var(--tinta); }
 .item-lista[open] summary::after { content: "–"; }
 .item-lista summary::-webkit-details-marker { display: none; }
 .item-lista summary:hover { background: var(--gris-50); }
+
+/* Apertura suave */
+.item-lista[open] .item-lista-cuerpo {
+  animation: item-abrir 0.25s ease-out;
+}
+@keyframes item-abrir {
+  from { opacity: 0; transform: translateY(-6px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+/* Resumen visual del item (miniatura + info + badges) */
+.item-resumen { display: flex; align-items: center; gap: 12px; flex: 1; min-width: 0; }
+.item-resumen-thumb {
+  width: 48px; height: 48px; flex: 0 0 48px;
+  object-fit: cover; border-radius: 10px;
+  border: 1px solid var(--gris-200); background: var(--gris-100);
+}
+.item-resumen-info { flex: 1; min-width: 0; display: flex; flex-direction: column; gap: 3px; }
+.item-resumen-info strong {
+  font-size: 0.88rem; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
+}
+.item-resumen-meta { display: flex; align-items: center; gap: 8px; flex-wrap: wrap; }
+
+/* Badges de mascota con color */
+.pet-badge {
+  display: inline-flex; align-items: center; gap: 4px;
+  font-size: 0.62rem; font-weight: 700; letter-spacing: 0.03em;
+  padding: 2px 8px; border-radius: 999px; text-transform: uppercase;
+}
+.pet-badge::before { content: ""; width: 6px; height: 6px; border-radius: 50%; }
+.pet-perro { background: #eff6ff; color: #1d4ed8; border: 1px solid #bfdbfe; }
+.pet-perro::before { background: #2563eb; }
+.pet-gato { background: #fff7ed; color: #c2410c; border: 1px solid #fed7aa; }
+.pet-gato::before { background: #ea580c; }
+
+/* Precio y contador de fotos en el resumen */
+.item-resumen-precio {
+  font-size: 0.72rem; font-weight: 700; color: var(--acento);
+  background: #fbecec; border: 1px solid #f0c4c5; border-radius: 999px;
+  padding: 2px 8px;
+}
+.item-resumen-fotos {
+  font-size: 0.68rem; color: var(--gris-600);
+}
+
 .item-lista-cuerpo { padding: 4px 14px 12px; border-top: 1px solid var(--gris-100); }
 .item-lista-cuerpo .campo:last-child { margin-bottom: 4px; }
+
+/* Campo de imagen dentro del card: con fondo suave para separar visualmente */
+.item-lista-cuerpo .campo-imagen {
+  background: var(--gris-50); border-radius: 10px; padding: 10px;
+  margin: 0 0 14px;
+}
 
 .nota { font-size: 0.78rem; color: var(--gris-600); }
 .nota-etapa {
@@ -481,23 +556,49 @@ a { color: var(--tinta); }
   font-family: ui-monospace, "Cascadia Code", Consolas, monospace;
 }
 
-.item-lista-acciones { display: flex; gap: 6px; padding: 0 0 10px 14px; align-items: center; flex-wrap: wrap; }
+.item-lista-acciones { display: flex; gap: 6px; padding: 0 14px 12px; align-items: center; flex-wrap: wrap; }
 .lista-quitar {
   border: 1px solid #f0c4c5; border-radius: 999px; background: #fbecec;
   color: var(--acento); font-weight: 600; font-size: 0.78rem;
   padding: 4px 12px; cursor: pointer; margin-left: 4px;
-  transition: background 0.15s, color 0.15s;
+  transition: background 0.15s, color 0.15s, box-shadow 0.15s;
 }
-.lista-quitar:hover { background: var(--acento); color: #fff; }
+.lista-quitar:hover { background: var(--acento); color: #fff; box-shadow: 0 2px 8px rgba(192,39,45,0.2); }
+
+/* Botones de acción: más grandes, con hover que "responde" */
 .mini-btn {
-  width: 27px; height: 27px; padding: 0;
-  border: 1px solid var(--gris-300); border-radius: 7px;
+  width: 32px; height: 32px; padding: 0;
+  border: 1px solid var(--gris-300); border-radius: 8px;
   background: var(--blanco); color: var(--gris-700);
-  font-size: 0.8rem; line-height: 1; cursor: pointer;
+  font-size: 0.9rem; line-height: 1; cursor: pointer;
+  display: inline-flex; align-items: center; justify-content: center;
+  transition: all 0.15s;
 }
-.mini-btn:hover { border-color: var(--negro); color: var(--negro); }
-.mini-btn.is-peligro:hover { border-color: var(--acento); color: var(--acento); background: #fbecec; }
-.lista-agregar { margin-top: 4px; }
+.mini-btn:hover {
+  border-color: var(--negro); color: var(--negro);
+  box-shadow: 0 2px 8px rgba(18, 18, 18, 0.1);
+  transform: translateY(-1px);
+}
+.mini-btn:active { transform: translateY(0); }
+.mini-btn.is-peligro:hover {
+  border-color: var(--acento); color: var(--acento); background: #fbecec;
+  box-shadow: 0 2px 8px rgba(192, 39, 45, 0.15);
+}
+
+/* Botón "+ Agregar": punteado que invita */
+.lista-agregar {
+  margin-top: 8px;
+  border: 2px dashed var(--gris-300) !important;
+  border-radius: 12px !important;
+  color: var(--gris-600) !important;
+  padding: 12px !important;
+  transition: all 0.15s !important;
+}
+.lista-agregar:hover {
+  border-color: var(--acento) !important;
+  color: var(--acento) !important;
+  background: #fbecec !important;
+}
 
 /* -------------------- Imágenes: modal selector (W3) --------------------- */
 .media-tabs { display: flex; gap: 8px; margin: 2px 0 14px; }

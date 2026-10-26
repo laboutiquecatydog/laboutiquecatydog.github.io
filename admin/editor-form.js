@@ -393,6 +393,93 @@
     return "Ítem " + (i + 1);
   }
 
+  /* Resumen visual del item: miniatura + título + badges — hace que el
+     header del collapsed ya cuente la historia sin abrirlo. */
+  function crearResumenItem(clave, item, i) {
+    var wrap = crear("div");
+    wrap.className = "item-resumen";
+
+    /* Miniatura según el tipo de item */
+    var rutaImagen = null;
+    if (clave === "productos" && item.fotos && item.fotos[0]) { rutaImagen = item.fotos[0].foto; }
+    else if (clave === "tarjetas" && item.imagen) { rutaImagen = item.imagen; }
+    else if (clave === "slides" && item.imagen) { rutaImagen = item.imagen; }
+    else if (clave === "fotos" && item.foto) { rutaImagen = item.foto; }
+    else if (item.imagen) { rutaImagen = item.imagen; }
+    else if (item.foto) { rutaImagen = item.foto; }
+
+    if (rutaImagen) {
+      var im = crear("img");
+      im.className = "item-resumen-thumb";
+      im.alt = "";
+      try { im.src = new URL(rutaImagen, location.origin).href; } catch (e2) { im.hidden = true; }
+      if (window.BQ_SUBIDAS && window.BQ_SUBIDAS[rutaImagen]) { im.src = window.BQ_SUBIDAS[rutaImagen]; }
+      im.onerror = function () { im.hidden = true; };
+      wrap.appendChild(im);
+    }
+
+    var info = crear("div");
+    info.className = "item-resumen-info";
+
+    var titulo = crear("strong");
+    titulo.textContent = nombreDeItem(clave, item, i);
+    info.appendChild(titulo);
+
+    var meta = crear("div");
+    meta.className = "item-resumen-meta";
+
+    /* Badges de mascota con color (solo productos) */
+    if (clave === "productos" && item.mascotas) {
+      var m = String(item.mascotas).split(/\s+/);
+      if (m.indexOf("perro") !== -1) {
+        var bPerro = crear("span");
+        bPerro.className = "pet-badge pet-perro";
+        bPerro.textContent = "Perro";
+        meta.appendChild(bPerro);
+      }
+      if (m.indexOf("gato") !== -1) {
+        var bGato = crear("span");
+        bGato.className = "pet-badge pet-gato";
+        bGato.textContent = "Gato";
+        meta.appendChild(bGato);
+      }
+    }
+
+    /* Precio visible en el header */
+    if (item.precio && String(item.precio).trim()) {
+      var precio = crear("span");
+      precio.className = "item-resumen-precio";
+      precio.textContent = String(item.precio);
+      meta.appendChild(precio);
+    }
+
+    /* Contador de fotos */
+    var numFotos = 0;
+    if (clave === "productos" && item.fotos) { numFotos = item.fotos.length; }
+    if (numFotos > 0) {
+      var fotos = crear("span");
+      fotos.className = "item-resumen-fotos";
+      fotos.textContent = numFotos + (numFotos === 1 ? " foto" : " fotos");
+      meta.appendChild(fotos);
+    }
+
+    if (meta.childNodes.length) { info.appendChild(meta); }
+    wrap.appendChild(info);
+    return wrap;
+  }
+
+  /* Clase de mascota para el borde de color del card */
+  function claseMascota(item) {
+    if (!item || !item.mascotas) { return ""; }
+    var m = String(item.mascotas).split(/\s+/);
+    var tienePerro = m.indexOf("perro") !== -1;
+    var tieneGato = m.indexOf("gato") !== -1;
+    if (tienePerro && tieneGato) { return "pet-ambos"; }
+    if (tienePerro) { return "pet-perro"; }
+    if (tieneGato) { return "pet-gato"; }
+    return "";
+  }
+
   function botonMini(texto, titulo, alClic, peligro) {
     var b = crear("button");
     b.type = "button";
@@ -435,8 +522,17 @@
       cajaItem.className = "item-lista";
       cajaItem.open = (valor || []).length === 1;
 
+      /* Borde de color según mascota (productos) */
+      var petClase = claseMascota(item);
+      if (petClase) { cajaItem.classList.add(petClase); }
+
+      /* Resumen visual: miniatura + título + badges + precio */
       var resumen = crear("summary");
-      resumen.textContent = nombreDeItem(clave, item, i);
+      if (item && typeof item === "object") {
+        resumen.appendChild(crearResumenItem(clave, item, i));
+      } else {
+        resumen.textContent = nombreDeItem(clave, item, i);
+      }
       cajaItem.appendChild(resumen);
 
       if (item && typeof item === "object") {
