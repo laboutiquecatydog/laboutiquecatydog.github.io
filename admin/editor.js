@@ -345,55 +345,73 @@
     $("#boton-carga-reintentar").hidden = true;
     $("#carga-texto").textContent = "Cargando el contenido…";
 
-    apiGet("/user").then(function (yo) {
+    /* Verificar permiso: solo la cuenta con acceso de ESCRITURA al repo
+       puede entrar. Otras cuentas GitHub ven "no autorizado" y no
+       pueden ni ver el contenido del sitio. */
+    Promise.all([
+      apiGet("/user"),
+      apiGet("/repos/" + REPO)
+    ]).then(function (resultados) {
+      var yo = resultados[0];
+      var repo = resultados[1];
+
+      if (!repo.permissions || !repo.permissions.push) {
+        sessionStorage.removeItem(CLAVE_TOKEN);
+        token = "";
+        mostrarVista("vista-auth");
+        mostrarErrorAuth("La cuenta @" + (yo.login || "?") +
+          " no tiene permiso para editar este sitio. Iniciá sesión con la cuenta del negocio.");
+        return;
+      }
+
       var cuenta = $("#estado-cuenta");
       cuenta.textContent = yo.login ? "@" + yo.login : "";
       cuenta.hidden = false;
-    }).catch(function () { /* el nombre es cosmético: sin bloqueo */ });
 
-    Promise.all([obtenerPagina(), obtenerSitio()]).then(function (resultados) {
-      datos = resultados[0];
-      datosSitio = resultados[1];
+      return Promise.all([obtenerPagina(), obtenerSitio()]).then(function (paginaSitio) {
+        datos = paginaSitio[0];
+        datosSitio = paginaSitio[1];
 
-      /* Base del historial y del chip: el estado tal cual está en GitHub */
-      historial = [];
-      punteroHistorial = -1;
-      instantaneaPublicada = instantaneaActual();
+        /* Base del historial y del chip: el estado tal cual está en GitHub */
+        historial = [];
+        punteroHistorial = -1;
+        instantaneaPublicada = instantaneaActual();
 
-      /* Si quedó un borrador de una sesión anterior, se recupera. */
-      var crudo = localStorage.getItem(CLAVE_BORRADOR);
-      if (crudo) {
-        try {
-          var guardado = JSON.parse(crudo);
-          if (guardado && Array.isArray(guardado.secciones)) {
-            datos = guardado;
-          }
-        } catch (e2) { localStorage.removeItem(CLAVE_BORRADOR); }
-      }
-      var crudoSitio = localStorage.getItem(CLAVE_BORRADOR_SITIO);
-      if (crudoSitio) {
-        try {
-          var guardadoSitio = JSON.parse(crudoSitio);
-          if (guardadoSitio && typeof guardadoSitio === "object") {
-            datosSitio = guardadoSitio;
-          }
-        } catch (e2) { localStorage.removeItem(CLAVE_BORRADOR_SITIO); }
-      }
+        /* Si quedó un borrador de una sesión anterior, se recupera. */
+        var crudo = localStorage.getItem(CLAVE_BORRADOR);
+        if (crudo) {
+          try {
+            var guardado = JSON.parse(crudo);
+            if (guardado && Array.isArray(guardado.secciones)) {
+              datos = guardado;
+            }
+          } catch (e2) { localStorage.removeItem(CLAVE_BORRADOR); }
+        }
+        var crudoSitio = localStorage.getItem(CLAVE_BORRADOR_SITIO);
+        if (crudoSitio) {
+          try {
+            var guardadoSitio = JSON.parse(crudoSitio);
+            if (guardadoSitio && typeof guardadoSitio === "object") {
+              datosSitio = guardadoSitio;
+            }
+          } catch (e2) { localStorage.removeItem(CLAVE_BORRADOR_SITIO); }
+        }
 
-      /* El chip refleja la diferencia real con lo publicado */
-      compararConPublicado();
-      if (borrador || borradorSitio) {
-        toast("Se restauró un borrador pendiente de publicar.", "ok");
-      }
+        /* El chip refleja la diferencia real con lo publicado */
+        compararConPublicado();
+        if (borrador || borradorSitio) {
+          toast("Se restauró un borrador pendiente de publicar.", "ok");
+        }
 
-      capturarHistorial(true);
-      seccionAbierta = -1;
-      actualizarEstadoCambios();
-      armarPlantillas();
-      renderLista();
-      actualizarModoPanel();
-      arrancarVistaPrevia();
-      mostrarVista("vista-editor");
+        capturarHistorial(true);
+        seccionAbierta = -1;
+        actualizarEstadoCambios();
+        armarPlantillas();
+        renderLista();
+        actualizarModoPanel();
+        arrancarVistaPrevia();
+        mostrarVista("vista-editor");
+      });
     }).catch(function (err) {
       if (String(err.message).indexOf("TOKEN_INVALIDO") !== -1) {
         sessionStorage.removeItem(CLAVE_TOKEN);
