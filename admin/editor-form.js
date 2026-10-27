@@ -648,13 +648,14 @@
     contenedor.appendChild(fieldset);
   }
 
-  function construirObjeto(objeto, raiz, ruta, contenedor, alCambiar, alCambiarImagen, contexto) {
+  function construirObjeto(objeto, raiz, ruta, contenedor, alCambiar, alCambiarImagen, contexto, excluidas) {
     /* Los campos técnicos van aparte, al final, en «Campos avanzados»:
       el día a día se edita sin ruido, pero nada queda fuera del panel. */
     var avanzados = [];
 
     Object.keys(objeto).forEach(function (clave) {
       if (TECNICOS[clave]) { return; }
+      if (excluidas && excluidas[clave]) { return; }
       if (AVANZADOS[clave] && typeof objeto[clave] !== "object") {
         avanzados.push(clave);
         return;
@@ -663,6 +664,15 @@
       var subRuta = ruta.concat([clave]);
 
       if (Array.isArray(valor)) {
+        /* Separador visual antes de listas: marca el cambio de zona */
+        if (EDITABLES[clave]) {
+          var separador = crear("div");
+          separador.className = "form-separador";
+          var sepLabel = crear("span");
+          sepLabel.textContent = DICT_LISTAS[clave] || etiquetaDe(clave);
+          separador.appendChild(sepLabel);
+          contenedor.appendChild(separador);
+        }
         construirLista(clave, valor, raiz, subRuta, contenedor, alCambiar, alCambiarImagen, contexto);
         return;
       }
@@ -674,7 +684,13 @@
         contenedor.appendChild(crearCampoImagen(clave, valor, subRuta, alCambiarImagen, contexto));
         return;
       }
-      contenedor.appendChild(crearCampo(clave, valor, raiz, subRuta, alCambiar, contexto));
+
+      var campo = crearCampo(clave, valor, raiz, subRuta, alCambiar, contexto);
+      /* Campos cortos van lado a lado (menos scroll, más densidad) */
+      if (clave === "precio" || clave === "mascotas" || clave === "etiqueta" || clave === "mostrarFiltros") {
+        campo.classList.add("campo-medio");
+      }
+      contenedor.appendChild(campo);
     });
 
     if (avanzados.length) {
@@ -704,6 +720,7 @@
       contenedor.innerHTML = "";
       var contexto = { esHero: seccion.tipo === "hero", nivel: "raiz" };
 
+      /* Header pegajoso con el nombre de la sección */
       var encabezado = crear("header");
       encabezado.className = "form-encabezado";
       var h2 = crear("h2");
@@ -715,7 +732,32 @@
       encabezado.appendChild(sub);
       contenedor.appendChild(encabezado);
 
-      construirObjeto(seccion, seccion, [], contenedor, alCambiar, alCambiarImagen, contexto);
+      /* --- Zona 1: Identidad (título, antetítulo, descripción) --- */
+      var identidadKeys = { eyebrow: 1, titulo: 1, texto: 1, intro: 1 };
+      var tieneIdentidad = Object.keys(seccion).some(function (k) {
+        return identidadKeys[k] && typeof seccion[k] === "string";
+      });
+
+      if (tieneIdentidad) {
+        var identidad = crear("div");
+        identidad.className = "form-identidad";
+        var identLabel = crear("h3");
+        identLabel.textContent = "Título y descripción";
+        identidad.appendChild(identLabel);
+
+        ["eyebrow", "titulo", "texto", "intro"].forEach(function (clave) {
+          if (seccion[clave] === undefined || typeof seccion[clave] !== "string") return;
+          identidad.appendChild(crearCampo(clave, seccion[clave], seccion, [clave], alCambiar, contexto));
+        });
+
+        contenedor.appendChild(identidad);
+      }
+
+      /* --- Zona 2: Resto del contenido (botones, listas, ajustes) --- */
+      var cuerpo = crear("div");
+      cuerpo.className = "form-cuerpo";
+      construirObjeto(seccion, seccion, [], cuerpo, alCambiar, alCambiarImagen, contexto, identidadKeys);
+      contenedor.appendChild(cuerpo);
     },
 
     /* Formulario de datos del local (data/sitio.json) */
