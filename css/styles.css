@@ -946,8 +946,8 @@ html.js .hero.is-entered .hero-media {
   transition-delay: 0.1s;
 }
 
-/* TÃtulo con efecto de escritura: un cursor finÃsimo parpadea mientras se
-   escribe y se retira al terminar. El texto real permanece en el DOM. */
+/* Título con efecto de escritura: un cursor finísimo parpadea mientras se
+   escribe y se desvanece suavemente al terminar (transition en opacity). */
 .hero-title .type-target { white-space: pre-wrap; }
 html.js .hero-title .type-caret {
   display: inline-block;
@@ -957,8 +957,13 @@ html.js .hero-title .type-caret {
   background: var(--accent);
   vertical-align: -0.08em;
   animation: caret-blink 1s steps(1) infinite;
+  transition: opacity 0.5s ease-out, width 0.3s ease-out;
 }
-html.js .hero-title.is-typed .type-caret { display: none; }
+html.js .hero-title.is-typed .type-caret {
+  opacity: 0;
+  width: 0;
+  animation: none;
+}
 @keyframes caret-blink { 0%, 50% { opacity: 1; } 50.01%, 100% { opacity: 0; } }
 
 /* LÃnea de progreso de scroll: detalle funcional junto al reloj de marca. */

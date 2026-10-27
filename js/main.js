@@ -559,7 +559,11 @@
       if (halted) return;
       if (si >= steps.length) {
         title.classList.add("is-typed");
-        if (caret.parentNode) { caret.parentNode.removeChild(caret); }
+        /* El caret se desvanece suave (CSS transition), no desaparece
+           de golpe — se retira del DOM cuando la transición termina. */
+        window.setTimeout(function () {
+          if (caret.parentNode) { caret.parentNode.removeChild(caret); }
+        }, 550);
         enter();
         return;
       }
@@ -573,9 +577,22 @@
 
       if (ci >= full.length) { si += 1; ci = 0; done = true; }
       placeCaret();
-      /* Pausa algo mayor al cerrar un segmento (**negrita**), casi nula
-         entre caracteres: ritmo de escritura natural. */
-      window.setTimeout(tick, done ? SPEED * 3 : SPEED);
+
+      /* Ritmo humano: no cada letra al mismo tiempo. Pausas más largas
+         en puntuación, micro-pausas en espacios, algo más rápido en
+         letras consecutivas — como alguien que escribe de verdad. */
+      var ultimoChar = full.charAt(ci - 1);
+      var delay = SPEED;
+      if (done) {
+        delay = SPEED * 6;
+      } else if (ultimoChar === "." || ultimoChar === "!" || ultimoChar === "?" || ultimoChar === "…") {
+        delay = SPEED * 9;
+      } else if (ultimoChar === "," || ultimoChar === ";" || ultimoChar === ":") {
+        delay = SPEED * 5;
+      } else if (ultimoChar === " ") {
+        delay = SPEED * 2.5;
+      }
+      window.setTimeout(tick, delay);
     }
 
     /* Arranque rápido: la escritura empieza apenas se acomoda la página. */
