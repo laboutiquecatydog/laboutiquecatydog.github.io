@@ -104,7 +104,10 @@ function listen() {
     }
   });
   server.listen(port, host, () => {
-    const url = "http://" + host + ":" + port + "/";
+    /* Se imprime "localhost" (no 127.0.0.1) porque el Worker de Cloudflare
+       valida el dominio contra ALLOWED_DOMAINS que incluye "localhost" pero
+       no "127.0.0.1" — usar 127.0.0.1 en el navegador rompe el login. */
+    const url = "http://localhost:" + port + "/";
     console.log("");
     console.log("  La Boutique Cat & Dog — servidor local");
     console.log("  Raíz: " + root);
